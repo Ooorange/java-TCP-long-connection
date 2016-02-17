@@ -9,7 +9,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 
 public class AnimationUtils {
-
+    int a;
     public static RotateAnimation initRotateAnimation(long duration,
             int fromAngle, int toAngle,
             boolean isFillAfter, int repeatCount) {
