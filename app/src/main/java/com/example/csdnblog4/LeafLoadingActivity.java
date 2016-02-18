@@ -1,8 +1,6 @@
 
 package com.example.csdnblog4;
 
-import java.util.Random;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +13,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import java.util.Random;
 
 
 public class LeafLoadingActivity extends Activity implements OnSeekBarChangeListener,
@@ -56,7 +56,7 @@ public class LeafLoadingActivity extends Activity implements OnSeekBarChangeList
     private Button mClearButton;
     private int mProgress = 0;
 
-    private TextView mProgressText;
+    private TextView mProgressText,tv_loading;
     private View mAddProgress;
     private SeekBar mFloatTimeSeekBar;
 
@@ -88,6 +88,7 @@ public class LeafLoadingActivity extends Activity implements OnSeekBarChangeList
         mDisparityText = (TextView) findViewById(R.id.text_disparity);
         mDisparityText.setText(getString(R.string.current_Disparity,
                 mLeafLoadingView.getMplitudeDisparity()));
+        tv_loading= (TextView) findViewById(R.id.tv_loading);
 
         mAmpireSeekBar = (SeekBar) findViewById(R.id.seekBar_ampair);
         mAmpireSeekBar.setOnSeekBarChangeListener(this);
@@ -118,6 +119,13 @@ public class LeafLoadingActivity extends Activity implements OnSeekBarChangeList
         mRotateTimeSeekBar.setProgress((int) mLeafLoadingView.getLeafRotateTime());
         mRotateTimeText.setText(getResources().getString(R.string.current_float_time,
                 mLeafLoadingView.getLeafRotateTime()));
+
+        tv_loading.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
