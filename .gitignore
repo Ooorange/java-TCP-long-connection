@@ -3,6 +3,7 @@ build/
 CSDNBlog4/build/
 
 .gradle/
+app.iml
 
 #Files fpr the dalvik VM
 *.dex
