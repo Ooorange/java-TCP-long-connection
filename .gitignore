@@ -1,5 +1,6 @@
 #gradle files
 build/
+CSDNBlog4/build/
 
 .gradle/
 
