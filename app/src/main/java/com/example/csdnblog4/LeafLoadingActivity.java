@@ -1,9 +1,8 @@
 
 package com.example.csdnblog4;
 
-import java.util.Random;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +14,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import java.util.Random;
 
 
 public class LeafLoadingActivity extends Activity implements OnSeekBarChangeListener,
@@ -159,6 +160,8 @@ public class LeafLoadingActivity extends Activity implements OnSeekBarChangeList
             mLeafLoadingView.setProgress(0);
             mHandler.removeCallbacksAndMessages(null);
             mProgress = 0;
+            Intent intent=new Intent(this,FeatureOne.class);
+            startActivity(intent);
         } else if (v == mAddProgress) {
             mProgress++;
             mLeafLoadingView.setProgress(mProgress);
