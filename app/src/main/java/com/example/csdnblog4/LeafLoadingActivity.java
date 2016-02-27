@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -168,12 +170,25 @@ public class LeafLoadingActivity extends Activity implements OnSeekBarChangeList
             mLeafLoadingView.setProgress(0);
             mHandler.removeCallbacksAndMessages(null);
             mProgress = 0;
-            Intent intent=new Intent(this,FeatureOne.class);
+            Intent intent=new Intent(this,VideoPlay.class);
             startActivity(intent);
         } else if (v == mAddProgress) {
             mProgress++;
             mLeafLoadingView.setProgress(mProgress);
             mProgressText.setText(String.valueOf(mProgress));
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.d("orange", "onTouchEventInActivity");
+        return super.onTouchEvent(event);
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d("orange", "dispatchKeyEvent");
+        return super.dispatchTouchEvent(ev);
     }
 }

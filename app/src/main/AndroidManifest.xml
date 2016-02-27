@@ -3,6 +3,7 @@
     package="com.example.csdnblog4"
     android:versionCode="1"
     android:versionName="1.0" >
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -21,6 +22,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".VideoPlay">
         </activity>
     </application>
 

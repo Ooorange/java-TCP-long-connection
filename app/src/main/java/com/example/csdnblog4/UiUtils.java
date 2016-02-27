@@ -2,6 +2,8 @@
 package com.example.csdnblog4;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -28,5 +30,24 @@ public class UiUtils {
             return DisplayMetrics.DENSITY_DEFAULT;
         }
     }
+    public static Bitmap getVideoThumbnail(String path){
+        Bitmap thumbnail=null;
+        MediaMetadataRetriever mediaMetadataRetriever=new MediaMetadataRetriever();
+        try {
+            mediaMetadataRetriever.setDataSource(path);
+            thumbnail = mediaMetadataRetriever.getFrameAtTime(1000);
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }finally {
+            try {
+                mediaMetadataRetriever.release();
 
+            }catch (RuntimeException e){
+                e.printStackTrace();
+            }
+        }
+        return thumbnail;
+    }
 }

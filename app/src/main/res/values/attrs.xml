@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <declare-styleable name="MediaPlayControlView">
+        <attr name="volumerBackColor" format="color"/>
+        <attr name="volumeColor" format="color"/>
+        <attr name="arcWidth" format="integer"/>
+        <attr name="totalCount" format="integer"/>
+        <attr name="showCount" format="integer"/>
+        <attr name="itemSplitSize" format="integer"/>
+        <attr name="centerImage" format="reference"/>
+
+    </declare-styleable>
+</resources>

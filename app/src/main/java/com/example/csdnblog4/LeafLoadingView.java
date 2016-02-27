@@ -16,6 +16,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 
@@ -95,7 +96,18 @@ public class LeafLoadingView extends View {
         initPaint();
         mLeafFactory = new LeafFactory();
         mLeafInfos = mLeafFactory.generateLeafs();
-
+        this.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        this.setClickable(true);
     }
 
     private void initPaint() {
@@ -136,9 +148,6 @@ public class LeafLoadingView extends View {
         mCurrentProgressPosition = mProgressWidth * mProgress / TOTAL_PROGRESS;
         // 即当前位置在图中所示1范围内
         if (mCurrentProgressPosition < mArcRadius) {
-            Log.i(TAG, "mProgress = " + mProgress + "---mCurrentProgressPosition = "
-                    + mCurrentProgressPosition
-                    + "--mArcProgressWidth" + mArcRadius);
             // 1.绘制白色ARC，绘制orange ARC
             // 2.绘制白色矩形
 
@@ -160,12 +169,8 @@ public class LeafLoadingView extends View {
             int startAngle = 180 - angle;
             // 扫过的角度
             int sweepAngle = 2 * angle;
-            Log.i(TAG, "startAngle = " + startAngle);
             canvas.drawArc(mArcRectF, startAngle, sweepAngle, false, mOrangePaint);
         } else {
-            Log.i(TAG, "mProgress = " + mProgress + "---transfer-----mCurrentProgressPosition = "
-                    + mCurrentProgressPosition
-                    + "--mArcProgressWidth" + mArcRadius);
             // 1.绘制white RECT
             // 2.绘制Orange ARC
             // 3.绘制orange RECT
@@ -206,7 +211,6 @@ public class LeafLoadingView extends View {
                 Matrix matrix = new Matrix();
                 float transX = mLeftMargin + leaf.x;
                 float transY = mLeftMargin + leaf.y;
-                Log.i(TAG, "left.x = " + leaf.x + "--leaf.y=" + leaf.y);
                 matrix.postTranslate(transX, transY);
                 // 通过时间关联旋转角度，则可以直接通过修改LEAF_ROTATE_TIME调节叶子旋转快慢
                 float rotateFraction = ((currentTime - leaf.startTime) % mLeafRotateTime)
@@ -260,7 +264,6 @@ public class LeafLoadingView extends View {
             default:
                 break;
         }
-        Log.i(TAG, "---a = " + a + "---w = " + w + "--leaf.x = " + leaf.x);
         return (int) (a * Math.sin(w * leaf.x)) + mArcRadius * 2 / 3;
     }
 
