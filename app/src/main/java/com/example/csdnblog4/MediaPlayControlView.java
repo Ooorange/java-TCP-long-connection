@@ -58,6 +58,7 @@ public class MediaPlayControlView extends View {
         arcWidth=typedArray.getInt(R.styleable.MediaPlayControlView_arcWidth, 20);
         volumerBackColor=typedArray.getColor(R.styleable.MediaPlayControlView_volumerBackColor, Color.YELLOW);
         volumeColor=typedArray.getColor(R.styleable.MediaPlayControlView_volumeColor,Color.GRAY);
+        typedArray.recycle();
     }
 
     @Override

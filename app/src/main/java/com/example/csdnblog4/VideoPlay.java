@@ -1,6 +1,7 @@
 package com.example.csdnblog4;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -70,6 +71,7 @@ public class VideoPlay extends FragmentActivity implements SurfaceHolder.Callbac
         initView();
         initListener();
         initHolder();
+        Log.d("orangePath", "onCreate");
     }
 
     private void initHolder() {
@@ -289,6 +291,7 @@ public class VideoPlay extends FragmentActivity implements SurfaceHolder.Callbac
 
     @Override
     protected void onDestroy() {
+        Log.d("orangePath","onDestroy");
         if (mediaPlayer.isPlaying()){
             mediaPlayer.stop();
         }
@@ -310,4 +313,13 @@ public class VideoPlay extends FragmentActivity implements SurfaceHolder.Callbac
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * 在manifest文件中如果添加了config change参数的话不会重新调用onCreate,onSaveInstanceState,onRestainInstance
+     * @param newConfig
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        Log.d("orangePath","onConfigurationChanged");
+        super.onConfigurationChanged(newConfig);
+    }
 }
