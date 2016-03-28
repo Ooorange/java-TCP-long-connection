@@ -59,6 +59,7 @@ public class MediaPlayControlView extends View {
         volumerBackColor=typedArray.getColor(R.styleable.MediaPlayControlView_volumerBackColor, Color.YELLOW);
         volumeColor=typedArray.getColor(R.styleable.MediaPlayControlView_volumeColor,Color.GRAY);
         typedArray.recycle();
+        int b;
     }
 
     @Override
