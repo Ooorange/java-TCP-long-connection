@@ -60,6 +60,7 @@ public class MediaPlayControlView extends View {
         volumeColor=typedArray.getColor(R.styleable.MediaPlayControlView_volumeColor,Color.GRAY);
         typedArray.recycle();
         int b;
+        int a;
     }
 
     @Override
