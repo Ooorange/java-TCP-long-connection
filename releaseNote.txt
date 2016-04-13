@@ -1,0 +1,3 @@
+版本: V1.0
+更新日志: 增加多渠道打包工具,使用方法:在项目目录下执行:
+    ./gradlew -Pmarket=Markets/markets.txt clean archiveApkRelease

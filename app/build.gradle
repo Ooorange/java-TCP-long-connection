@@ -1,18 +1,45 @@
 apply plugin: 'com.android.application'
+apply plugin: 'packer'
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "com.example.csdnblog4"
-        minSdkVersion 19
+        minSdkVersion 14
         targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    signingConfigs {
+        release {
+            storeFile file('key/CSDNBlog.jks')
+            storePassword '532800'
+            keyAlias 'CSDNBlog'
+            keyPassword '532800'
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 }
-
+packer {
+    // 指定渠道打包输出目录
+    archiveOutput = file(new File(project.rootProject.buildDir.path, "ApkOutPuts"))
+    archiveNameFormat='${flavorName}_LeafProgress_${versionName}-${versionCode}-${buildTime}'
+    buildNumberAuto =false
+    buildNumberTypeMatcher=['release']
+    manifestMatcher =['UMENG_CHANNEL']
+}
 dependencies {
     compile 'com.android.support:support-v4:22.2.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
