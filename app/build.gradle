@@ -35,7 +35,7 @@ android {
 packer {
     // 指定渠道打包输出目录
     archiveOutput = file(new File(project.rootProject.buildDir.path, "ApkOutPuts"))
-    archiveNameFormat='${flavorName}_LeafProgress_${versionName}-${versionCode}-${buildTime}'
+    archiveNameFormat='${flavorName}_LeafProgress_V${versionName}-${versionCode}-${buildTime}'
     buildNumberAuto =false
     buildNumberTypeMatcher=['release']
     manifestMatcher =['UMENG_CHANNEL']
