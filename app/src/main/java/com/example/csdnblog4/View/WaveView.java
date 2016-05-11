@@ -15,7 +15,7 @@ import java.util.List;
  * 水波扩散效果,
  * Created by orange on 16/4/26.
  */
-public class WhewView extends View {
+public class WaveView extends View {
     private Paint paint;
     private int maxWidth = 255;
     // 是否运行
@@ -23,17 +23,17 @@ public class WhewView extends View {
     private List<String> alphaList = new ArrayList<String>();
     private List<String> startWidthList = new ArrayList<String>();
 
-    public WhewView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public WaveView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public WhewView(Context context, AttributeSet attrs) {
+    public WaveView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public WhewView(Context context) {
+    public WaveView(Context context) {
         super(context);
         init();
     }
