@@ -34,7 +34,7 @@ public class AllFeatureActivity extends BaseActivity {
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         lv_all_feature.setLayoutManager(layoutManager);
         lv_all_feature.setItemAnimator(new DefaultItemAnimator());
-        lv_all_feature.addItemDecoration(new DividerItemDecoration(Color.parseColor("#000000"),5));
+        lv_all_feature.addItemDecoration(new DividerItemDecoration(Color.parseColor("#000000"),2));
         lv_all_feature.setAdapter(allFeatureAdapter);
         initListener();
     }

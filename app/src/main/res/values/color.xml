@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="half_translate">#9cff0000</color>
-
+    <color name="half_translate">#30ff0000</color>
 </resources>

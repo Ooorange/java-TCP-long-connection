@@ -6,6 +6,7 @@ import android.os.Bundle;
 /**
  * Created by orange on 16/5/10.
  */
+
 public class BaseActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
