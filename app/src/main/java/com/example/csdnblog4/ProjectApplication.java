@@ -7,10 +7,12 @@ import com.squareup.leakcanary.LeakCanary;
 /**
  * Created by orange on 16/5/10.
  */
-public class PrejectApplication extends Application {
+public class ProjectApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
+        AppCrashHandler appCrashHandler=new AppCrashHandler();
+        Thread.setDefaultUncaughtExceptionHandler(appCrashHandler);
     }
 }

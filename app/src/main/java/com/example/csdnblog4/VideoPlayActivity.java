@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * Created by orange on 16/2/18.
  */
-public class VideoPlay extends FragmentActivity implements SurfaceHolder.Callback{
+public class VideoPlayActivity extends FragmentActivity implements SurfaceHolder.Callback{
     Button btStop,btPlay,btPause;
     TextView tvVolume,tvPlayPos;
     MediaPlayer mediaPlayer;
@@ -268,7 +268,7 @@ public class VideoPlay extends FragmentActivity implements SurfaceHolder.Callbac
             public void onCompletion(MediaPlayer mp) {
                 playSeekBar.setProgress(100);
                 tvPlayPos.setText(videoTotalTime);
-                Toast.makeText(VideoPlay.this, "播放结束", Toast.LENGTH_SHORT).show();
+                Toast.makeText(VideoPlayActivity.this, "播放结束", Toast.LENGTH_SHORT).show();
             }
         });
         volumSeekBar.setProgress(50);

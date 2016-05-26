@@ -11,7 +11,6 @@ import com.example.csdnblog4.Adapter.AllFeatureAdapter;
 import com.example.csdnblog4.Adapter.DividerItemDecoration;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * you need set:LeakCanary.install(this); in application,then you can good to go
@@ -27,9 +26,7 @@ public class AllFeatureActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_feature_activity);
-        ButterKnife.bind(this);
-        allFeatureName =new String[]{"内存泄漏检查工具","叶子飘落动画"};
+        allFeatureName =new String[]{"内存泄漏检查工具","叶子飘落动画","排序算法"};
         allFeatureAdapter=new AllFeatureAdapter(this, allFeatureName);
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         lv_all_feature.setLayoutManager(layoutManager);
@@ -37,6 +34,11 @@ public class AllFeatureActivity extends BaseActivity {
         lv_all_feature.addItemDecoration(new DividerItemDecoration(Color.parseColor("#000000"),2));
         lv_all_feature.setAdapter(allFeatureAdapter);
         initListener();
+    }
+
+    @Override
+    void initContentView(Bundle savedInstanceState) {
+        setContentView(R.layout.all_feature_activity);
     }
 
     private void initListener(){
@@ -50,6 +52,10 @@ public class AllFeatureActivity extends BaseActivity {
                         break;
                     case 1:
                         intent=new Intent(AllFeatureActivity.this,LeafLoadingActivity.class);
+                        break;
+                    case 2:
+                        intent=new Intent(AllFeatureActivity.this,SortActivity.class);
+                        break;
                 }
                 startActivity(intent);
             }

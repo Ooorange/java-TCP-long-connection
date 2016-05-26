@@ -11,7 +11,7 @@
         android:targetSdkVersion="19" />
 
     <application
-        android:name=".PrejectApplication"
+        android:name=".ProjectApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -25,11 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VideoPlay"></activity>
+        <activity android:name=".VideoPlayActivity"></activity>
         <activity android:name=".LeafLoadingActivity" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".MemoryLeak" />
-
+        <activity android:name=".SortActivity"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="100004" />

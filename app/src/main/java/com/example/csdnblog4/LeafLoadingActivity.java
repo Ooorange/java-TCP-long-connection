@@ -170,7 +170,7 @@ public class LeafLoadingActivity extends Activity implements OnSeekBarChangeList
             mLeafLoadingView.setProgress(0);
             mHandler.removeCallbacksAndMessages(null);
             mProgress = 0;
-            Intent intent=new Intent(this,VideoPlay.class);
+            Intent intent=new Intent(this,VideoPlayActivity.class);
             startActivity(intent);
         } else if (v == mAddProgress) {
             mProgress++;
