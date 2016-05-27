@@ -1,4 +1,4 @@
-package com.example.csdnblog4;
+package com.example.csdnblog4.common;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

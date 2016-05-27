@@ -8,7 +8,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by orange on 16/5/10.
  */
-public class MemoryLeak extends BaseActivity {
+public class MemoryLeakActivity extends BaseActivity {
     @BindView(R.id.circleView)
     CircleImageView circleImageView;
     @Override

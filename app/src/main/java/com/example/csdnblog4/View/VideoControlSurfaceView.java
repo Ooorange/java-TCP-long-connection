@@ -1,4 +1,4 @@
-package com.example.csdnblog4;
+package com.example.csdnblog4.View;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.csdnblog4.R;
 
 /**
  * Created by orange on 16/2/25.

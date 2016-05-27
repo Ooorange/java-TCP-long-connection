@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.example.csdnblog4.VideoControlSurfaceView
+                <com.example.csdnblog4.View.VideoControlSurfaceView
 
                     android:id="@+id/svSurfaceView"
                     android:layout_width="match_parent"
@@ -105,7 +105,7 @@
 
             </LinearLayout>
 
-            <com.example.csdnblog4.MediaPlayControlView
+            <com.example.csdnblog4.View.MediaPlayControlView
                 android:id="@+id/mediaPlayControlView"
                 mediaPlay:itemSplitSize="13"
                 mediaPlay:arcWidth="15"

@@ -21,6 +21,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.csdnblog4.common.Constance;
+import com.example.csdnblog4.View.MediaPlayControlView;
+import com.example.csdnblog4.common.TimeUtils;
+import com.example.csdnblog4.common.UiUtils;
+import com.example.csdnblog4.View.VideoControlSurfaceView;
+
 import java.io.IOException;
 
 /**

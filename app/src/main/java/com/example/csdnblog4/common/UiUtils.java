@@ -1,5 +1,5 @@
 
-package com.example.csdnblog4;
+package com.example.csdnblog4.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;

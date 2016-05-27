@@ -37,7 +37,7 @@ public class SortPresenterImp implements SortPresenter {
     }
 
     @Override
-    public void setAlgorithm(int algorithm,int[] data) {
+    public void setAlgorithm(int algorithm) {
         this.algorithm=algorithm;
     }
 

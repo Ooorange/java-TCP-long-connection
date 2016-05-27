@@ -1,5 +1,5 @@
 
-package com.example.csdnblog4;
+package com.example.csdnblog4.View;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,9 +15,11 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.example.csdnblog4.R;
+import com.example.csdnblog4.common.UiUtils;
 
 
 public class LeafLoadingView extends View {

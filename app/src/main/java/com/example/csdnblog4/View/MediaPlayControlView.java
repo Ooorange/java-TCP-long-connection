@@ -1,4 +1,4 @@
-package com.example.csdnblog4;
+package com.example.csdnblog4.View;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.example.csdnblog4.R;
 
 /**
  * Created by orange on 16/2/25.
@@ -50,7 +52,7 @@ public class MediaPlayControlView extends View {
     public void initView(Context context,AttributeSet attrs, int defStyleAttr){
         paint=new Paint();
         rectForCenterImage=new Rect();
-        TypedArray typedArray=context.obtainStyledAttributes(attrs,R.styleable.MediaPlayControlView,defStyleAttr,0);
+        TypedArray typedArray=context.obtainStyledAttributes(attrs, R.styleable.MediaPlayControlView,defStyleAttr,0);
         totalCount=typedArray.getInt(R.styleable.MediaPlayControlView_totalCount,15);
         centerImageBitmap=BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(R.styleable.MediaPlayControlView_centerImage, 0));
         itemSplitSize=typedArray.getInt(R.styleable.MediaPlayControlView_itemSplitSize, 20);

@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp" >
 
-        <com.example.csdnblog4.LeafLoadingView
+        <com.example.csdnblog4.View.LeafLoadingView
             android:id="@+id/leaf_loading"
             android:layout_width="302dp"
             android:layout_height="61dp"

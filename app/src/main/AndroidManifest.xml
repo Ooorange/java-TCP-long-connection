@@ -11,13 +11,13 @@
         android:targetSdkVersion="19" />
 
     <application
-        android:name=".ProjectApplication"
+        android:name=".common.ProjectApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.csdnblog4.AllFeatureActivity"
+            android:name=".AllFeatureActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,9 +27,11 @@
         </activity>
         <activity android:name=".VideoPlayActivity"></activity>
         <activity android:name=".LeafLoadingActivity" />
-        <activity android:name=".BaseActivity" />
-        <activity android:name=".MemoryLeak" />
+        <activity android:name=".MemoryLeakActivity" />
         <activity android:name=".SortActivity"/>
+        <activity android:name=".AnimateActivity"/>
+        <activity android:name=".SmileActivity"/>
+        <activity android:name=".ValueAnimatorActivityTranslate"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="100004" />

@@ -4,6 +4,8 @@ package com.example.csdnblog4;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.example.csdnblog4.R;
+
 public class MainActivity extends Activity {
 
     @Override

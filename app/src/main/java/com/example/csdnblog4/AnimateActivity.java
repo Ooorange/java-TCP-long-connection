@@ -13,20 +13,23 @@ import com.example.csdnblog4.Adapter.DividerItemDecoration;
 import butterknife.BindView;
 
 /**
- * you need set:LeakCanary.install(this); in application,then you can good to go
- * Created by orange on 16/5/10.
+ * Created by orange on 16/5/27.
  */
-
-public class AllFeatureActivity extends BaseActivity {
+public class AnimateActivity extends BaseActivity {
     @BindView(R.id.lv_all_feature)
     RecyclerView lv_all_feature;
 
     AllFeatureAdapter allFeatureAdapter;
     String[] allFeatureName;
     @Override
+    void initContentView(Bundle savedInstanceState) {
+        setContentView(R.layout.all_feature_activity);
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        allFeatureName =new String[]{"内存泄漏检查工具","叶子飘落动画","排序算法","动画"};
+
+        allFeatureName =new String[]{"属性动画位之移颜色变化","笑脸动画"};
         allFeatureAdapter=new AllFeatureAdapter(this, allFeatureName);
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         lv_all_feature.setLayoutManager(layoutManager);
@@ -36,28 +39,23 @@ public class AllFeatureActivity extends BaseActivity {
         initListener();
     }
 
-    @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.all_feature_activity);
-    }
-
     private void initListener(){
         allFeatureAdapter.setOnItemtClickListener(new AllFeatureAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent=null;
-                switch (position){
+                Intent intent = null;
+                switch (position) {
                     case 0:
-                        intent=new Intent(AllFeatureActivity.this,MemoryLeakActivity.class);
+                        intent = new Intent(AnimateActivity.this, ValueAnimatorActivityTranslate.class);
                         break;
                     case 1:
-                        intent=new Intent(AllFeatureActivity.this,LeafLoadingActivity.class);
+                        intent = new Intent(AnimateActivity.this, SmileActivity.class);
                         break;
                     case 2:
-                        intent=new Intent(AllFeatureActivity.this,SortActivity.class);
+                        intent = new Intent(AnimateActivity.this, SortActivity.class);
                         break;
                     case 3:
-                        intent=new Intent(AllFeatureActivity.this,AnimateActivity.class);
+                        intent = new Intent(AnimateActivity.this, AnimateActivity.class);
                 }
                 startActivity(intent);
             }

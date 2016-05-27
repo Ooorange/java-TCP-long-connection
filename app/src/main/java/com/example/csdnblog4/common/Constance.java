@@ -1,4 +1,4 @@
-package com.example.csdnblog4;
+package com.example.csdnblog4.common;
 
 /**
  * Created by orange on 16/2/25.

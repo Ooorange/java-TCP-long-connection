@@ -5,5 +5,5 @@ package com.example.csdnblog4.iPresenter;
  */
 public interface SortPresenter extends BasePresenter {
     void getData();
-    void setAlgorithm(int algorithm,int data[]);
+    void setAlgorithm(int algorithm);
 }

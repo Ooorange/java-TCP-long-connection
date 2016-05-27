@@ -1,4 +1,4 @@
-package com.example.csdnblog4;
+package com.example.csdnblog4.common;
 
 import android.app.Application;
 
