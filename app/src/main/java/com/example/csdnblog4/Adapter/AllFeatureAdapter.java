@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.csdnblog4.R;
@@ -30,7 +31,7 @@ public class AllFeatureAdapter extends RecyclerView.Adapter<AllFeatureAdapter.Al
     @Override
     public void onBindViewHolder(AllFeatureViewHolder holder, final int position) {
         holder.featureName.setText(features[position]);
-        holder.featureName.setOnClickListener(new View.OnClickListener() {
+        holder.ll_item_containerl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onItemClick(position);
@@ -45,9 +46,11 @@ public class AllFeatureAdapter extends RecyclerView.Adapter<AllFeatureAdapter.Al
 
     public class AllFeatureViewHolder extends RecyclerView.ViewHolder{
         private TextView featureName;
+        private LinearLayout ll_item_containerl;
         public AllFeatureViewHolder(View itemView) {
             super(itemView);
             featureName= (TextView) itemView.findViewById(R.id.tv_featureName);
+            ll_item_containerl= (LinearLayout) itemView.findViewById(R.id.ll_item_container);
         }
     }
     public void setOnItemtClickListener(onItemClickListener itemtClickListener){

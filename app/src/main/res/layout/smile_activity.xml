@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <com.example.csdnblog4.View.SmileView
+        android:id="@+id/sv_smile"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </com.example.csdnblog4.View.SmileView>
