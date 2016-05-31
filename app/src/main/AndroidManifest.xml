@@ -32,6 +32,7 @@
         <activity android:name=".AnimateActivity"/>
         <activity android:name=".SmileActivity"/>
         <activity android:name=".ValueAnimatorActivityTranslate"/>
+        <activity android:name=".FeatureGuidActivity"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="100004" />
