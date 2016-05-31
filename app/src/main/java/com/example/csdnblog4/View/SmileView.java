@@ -17,6 +17,7 @@ import android.view.animation.DecelerateInterpolator;
  * onMeasure 确定view以及childview的大小
  * onLayout 确定childView的位置
  * onSizeChanged 确定View的大小
+ * 在绘制图形前要先将画布旋转移动,
  * Created by orange on 16/5/27.
  */
 public class SmileView extends View{
@@ -78,7 +79,7 @@ public class SmileView extends View{
         RectF rectF=new RectF(-rf,-rf,rf,rf);
 
         canvas.save();
-
+        //画布旋转的中心点在画布的圆点,顺时针旋转,此时x,y坐标轴也会旋转
         if (valueAnimatorValue>=135){
             canvas.rotate(valueAnimatorValue-135);
         }
