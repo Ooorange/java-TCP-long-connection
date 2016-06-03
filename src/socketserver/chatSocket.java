@@ -1,9 +1,14 @@
 package socketserver;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -21,8 +26,36 @@ public class chatSocket {
 			while((reciverData=bufferedReader.readLine())!=null){
 				System.out.println("服务器收到数据:"+reciverData);
 			}
-			System.out.println("＊＊＊客户端链接成功，数据接受成功，即将关闭链接＊＊＊＊");
 			socket.shutdownInput();
+			//＊＊＊＊＊＊＊＊＊将一个java文件传给客户端＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+			File file=new File("/work/workspace/ChatServer/src/socketserver/ServerActivity.java");
+			FileInputStream fileInputStream=new FileInputStream(file);
+			InputStreamReader inputFileStreamReader=new InputStreamReader(fileInputStream,"utf-8");
+			BufferedReader bufferedFileReader=new BufferedReader(inputFileStreamReader);
+			String fileData=null;
+			StringBuilder stringBuilder=new StringBuilder();
+			while((fileData=bufferedFileReader.readLine())!=null){
+				stringBuilder.append(fileData);
+			}
+			System.out.println(stringBuilder.toString());
+			//*****************end of file read********
+			
+			//****************file write************
+			OutputStream outputStream=socket.getOutputStream();
+			BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(outputStream);
+			byte[] data=stringBuilder.toString().getBytes();
+			bufferedOutputStream.write(data, 0, data.length);
+			bufferedOutputStream.flush();
+			if (socket!=null) {
+				socket.shutdownOutput();
+			}
+			bufferedOutputStream.close();
+			outputStream.close();
+			bufferedFileReader.close();
+			inputFileStreamReader.close();
+			fileInputStream.close();
+			//***************end of file write************
+			
 			bufferedReader.close();
 			inputStreamReader.close();
 			inputStream.close();
