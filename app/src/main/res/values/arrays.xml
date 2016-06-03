@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="project_features">
+        <item>内存泄漏检查工具</item>
+        <item>叶子飘落动画</item>
+        <item>排序算法</item>
+        <item>动画</item>
+        <item>Socket通信</item>
+    </string-array>
     <array name="landing_bg">
         <item>@color/light_green</item>
         <item>@color/light_purple</item>

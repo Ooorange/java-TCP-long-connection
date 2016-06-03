@@ -26,7 +26,7 @@ import static android.widget.LinearLayout.VERTICAL;
 
 
 /**
- * @Link(http://www.android100.org/html/201307/11/3548.html)
+ * {@Link #http://www.android100.org/html/201307/11/3548.html}
  * 此处onTouchEvent()中手势的判断对多手指进行了判断,
  */
 public class CirclePageIndicator extends View implements PageIndicator {

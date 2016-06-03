@@ -27,7 +27,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        allFeatureName =new String[]{"内存泄漏检查工具","叶子飘落动画","排序算法","动画"};
+        allFeatureName =getResources().getStringArray(R.array.project_features);
+//        allFeatureName =arrs;
         allFeatureAdapter=new AllFeatureAdapter(this, allFeatureName);
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         lv_all_feature.setLayoutManager(layoutManager);
@@ -35,7 +36,7 @@ public class MainActivity extends BaseActivity {
         lv_all_feature.addItemDecoration(new DividerItemDecoration(Color.parseColor("#000000"), 2));
         lv_all_feature.setAdapter(allFeatureAdapter);
         initListener();
-        HostInetTest hostInetTest=new HostInetTest();
+        HostInetTest hostInetTest=new HostInetTest();/**InetAddress and URL APi test */
     }
 
     @Override
@@ -60,6 +61,10 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 3:
                         intent=new Intent(MainActivity.this,AnimateActivity.class);
+                        break;
+                    case 4:
+                        intent=new Intent(MainActivity.this,SocketTestActivity.class);
+                        break;
                 }
                 startActivity(intent);
             }

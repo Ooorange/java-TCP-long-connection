@@ -5,7 +5,7 @@
     android:versionName="1.0">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AllFeatureActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +33,7 @@
         <activity android:name=".SmileActivity"/>
         <activity android:name=".ValueAnimatorActivityTranslate"/>
         <activity android:name=".FeatureGuidActivity"/>
+        <activity android:name=".SocketTestActivity"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="100004" />
