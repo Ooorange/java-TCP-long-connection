@@ -7,6 +7,7 @@
         <item>排序算法</item>
         <item>动画</item>
         <item>Socket通信</item>
+        <item>多线程</item>
     </string-array>
     <array name="landing_bg">
         <item>@color/light_green</item>

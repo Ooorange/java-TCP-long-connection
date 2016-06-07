@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/half_translate"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_left_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:paddingLeft="12dp"
+            android:src="@drawable/btn_back_preactivity_selector" />
+
+        <TextView
+            android:id="@+id/tv_back_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_back"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:text="返回"
+            android:textColor="@color/btn_action_back_selector"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:maxEms="10"
+        android:singleLine="true"
+        android:textColor="@color/white_color"
+        android:textSize="15sp" />
+
+    <ImageButton
+        android:id="@+id/iv_right_button"
+        android:layout_width="54dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/tv_right_menu_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:paddingRight="15dp"
+        android:textColor="@color/white_color" />
+</RelativeLayout>
