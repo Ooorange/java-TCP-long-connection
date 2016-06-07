@@ -10,4 +10,8 @@
         <attr name="centerImage" format="reference"/>
 
     </declare-styleable>
+
+    <declare-styleable name="ShimmerView">
+        <attr name="reflectionColor" format="color"/>
+    </declare-styleable>
 </resources>

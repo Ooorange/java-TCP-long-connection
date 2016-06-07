@@ -13,8 +13,8 @@ public abstract class BaseActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initContentView(savedInstanceState);
+        setContentView(initContentView());
         ButterKnife.bind(this);
     }
-    abstract void initContentView(Bundle savedInstanceState);
+    abstract int initContentView();
 }

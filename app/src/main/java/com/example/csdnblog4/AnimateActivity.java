@@ -22,14 +22,15 @@ public class AnimateActivity extends BaseActivity {
     AllFeatureAdapter allFeatureAdapter;
     String[] allFeatureName;
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.all_feature_activity);
+    int initContentView() {
+        return R.layout.all_feature_activity;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        allFeatureName =new String[]{"属性动画位之移颜色变化","笑脸动画","viewPager引导&&Indicator动画"};
+        allFeatureName =new String[]{"属性动画位之移颜色变化","笑脸动画","viewPager引导&&Indicator动画","闪动效果"};
         allFeatureAdapter=new AllFeatureAdapter(this, allFeatureName);
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         lv_all_feature.setLayoutManager(layoutManager);
@@ -55,7 +56,8 @@ public class AnimateActivity extends BaseActivity {
                         intent = new Intent(AnimateActivity.this, FeatureGuidActivity.class);
                         break;
                     case 3:
-                        intent = new Intent(AnimateActivity.this, AnimateActivity.class);
+                        intent = new Intent(AnimateActivity.this, ShimmerActivity.class);
+                        break;
                 }
                 startActivity(intent);
             }

@@ -23,8 +23,8 @@ public class ValueAnimatorActivityTranslate extends BaseActivity {
     Button bt_startY_ani;
 
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.animate_activity);
+    int initContentView() {
+        return R.layout.animate_activity;
     }
 
     @OnClick(R.id.iv_delete)

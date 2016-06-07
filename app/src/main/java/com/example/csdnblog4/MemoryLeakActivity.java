@@ -16,9 +16,8 @@ public class MemoryLeakActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
     }
-
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_memory_leak);
+    int initContentView() {
+        return R.layout.activity_memory_leak;
     }
 }

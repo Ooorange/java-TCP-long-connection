@@ -70,10 +70,9 @@ public class FeatureGuidActivity extends BaseActivity{
 
 
     }
-
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.featureguid_act);
+    int initContentView() {
+        return R.layout.featureguid_act;
     }
 
     /**这个与之前做的图片浏览器不同的是,此adapter装的是图片的地址已经标题,相当于页面元素需要自己设定

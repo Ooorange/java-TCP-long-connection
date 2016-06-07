@@ -28,10 +28,9 @@ public class SocketTestActivity extends BaseActivity implements SocketClient.Suc
     UDPDataInteractor udpDataInteractor;
     public static final String[] items={"TCP传输","UDP传输"};
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
+    int initContentView() {
+        return R.layout.activity_main;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

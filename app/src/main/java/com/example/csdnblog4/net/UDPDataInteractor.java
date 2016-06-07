@@ -34,8 +34,8 @@ public class UDPDataInteractor {
             }
         }
     };
-    public UDPDataInteractor(SuccessCallBack successCallBack){
-        this.successCallBack=successCallBack;
+    public UDPDataInteractor(SuccessCallBack successCallBackk){
+        this.successCallBack=successCallBackk;
         initClient();
     }
 

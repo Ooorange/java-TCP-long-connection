@@ -46,9 +46,10 @@ public class SortActivity extends BaseActivity implements ISortView {
     public void getData(){
         basePresenter.getData();
     }
+
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.sort_activity);
+    int initContentView() {
+        return R.layout.sort_activity;
     }
 
     public void addRadioGroup(String[] itemName) {

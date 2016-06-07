@@ -40,10 +40,9 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.all_feature_activity);
+    int initContentView() {
+        return R.layout.all_feature_activity;
     }
-
     private void initListener(){
         allFeatureAdapter.setOnItemtClickListener(new AllFeatureAdapter.onItemClickListener() {
             @Override

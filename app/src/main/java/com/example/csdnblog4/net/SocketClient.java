@@ -24,17 +24,17 @@ import javax.net.SocketFactory;
  */
 public class SocketClient {
     public String reciverData;
-    private SuccessCallBack successCallBack;
+    private SuccessCallBack mSuccessCallBack;
     private Handler handler;
     public SocketClient(final SuccessCallBack successCallBack){
-        this.successCallBack=successCallBack;
+        this.mSuccessCallBack = successCallBack;
         handler=new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                if (successCallBack!=null){
+                if (mSuccessCallBack !=null){
                     reciverData=msg.getData().getString("data");
-                    successCallBack.reciveDataSuccess(reciverData);
+                    mSuccessCallBack.reciveDataSuccess(reciverData);
                 }
             }
         };
@@ -60,7 +60,7 @@ public class SocketClient {
             printWriter.flush();
             socket.shutdownOutput();
             reciverData=getReciverData(socket);
-            if (successCallBack!=null){
+            if (mSuccessCallBack !=null){
                 Message message=Message.obtain();
                 Bundle bundle=new Bundle();
                 bundle.putString("data",reciverData);

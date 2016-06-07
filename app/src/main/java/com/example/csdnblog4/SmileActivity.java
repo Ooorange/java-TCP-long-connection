@@ -15,9 +15,10 @@ public class SmileActivity extends BaseActivity {
     @BindView(R.id.sv_smile)
     SmileView smileView;
     @Override
-    void initContentView(Bundle savedInstanceState) {
-        setContentView(R.layout.smile_activity);
+    int initContentView() {
+        return R.layout.smile_activity;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
