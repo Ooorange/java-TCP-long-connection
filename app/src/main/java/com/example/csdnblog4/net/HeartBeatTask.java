@@ -3,6 +3,7 @@ package com.example.csdnblog4.net;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ public class HeartBeatTask implements Runnable {
     private static final int REPEATTIME = 4000;
     private volatile boolean isKeepAlive = true;
     private Socket socket;
+    private OutputStream outputStream;
 
     public HeartBeatTask(Socket socket) {
         this.socket = socket;
@@ -23,24 +25,23 @@ public class HeartBeatTask implements Runnable {
     public void run() {
         try {
             while (isKeepAlive) {
-
-                SocketUtil.write2Stream("heartBeat", socket.getOutputStream());
+                outputStream=socket.getOutputStream();
+                SocketUtil.write2Stream("heartBeat", outputStream);
                 try {
                     Thread.sleep(REPEATTIME);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+            if (outputStream!=null){
+                SocketUtil.closeStream(outputStream);
+            }
         } catch (IOException e) {
             Log.d(new Date().toString() , " : Time is out, request" + " has been closed.");
             e.printStackTrace();
         }finally {
-            if (socket!=null){
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            if (outputStream!=null){
+                SocketUtil.closeStream(outputStream);
             }
         }
     }

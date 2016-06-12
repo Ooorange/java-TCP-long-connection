@@ -36,7 +36,7 @@ public class SocketUtil {
             String piece = "";
             int te=0;
 
-            while(te<header.length) {
+            while(te<header.length&&te!=-1) {
                 te += bufferedInputStream.read(header, te, header.length);
             }
 
@@ -74,6 +74,21 @@ public class SocketUtil {
     }
 
 
+    public static void closeStream(InputStream is){
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void closeStream(OutputStream os){
+        try {
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static byte[] int2ByteArrays(int i) {
         byte[] result = new byte[4];
