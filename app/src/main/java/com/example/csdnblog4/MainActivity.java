@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.csdnblog4.Adapter.AllFeatureAdapter;
 import com.example.csdnblog4.Adapter.DividerItemDecoration;
-import com.example.csdnblog4.net.HostInetTest;
 
 import butterknife.BindView;
 
@@ -36,7 +35,9 @@ public class MainActivity extends BaseActivity {
         lv_all_feature.addItemDecoration(new DividerItemDecoration(Color.parseColor("#000000"), 2));
         lv_all_feature.setAdapter(allFeatureAdapter);
         initListener();
-        HostInetTest hostInetTest=new HostInetTest();/**InetAddress and URL APi test */
+//        HostInetTest hostInetTest=new HostInetTest();/**InetAddress and URL APi test */
+        setRlLeftContainerVisiablity(false);
+        setTitle("项目预览");
     }
 
     @Override
@@ -63,6 +64,9 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 4:
                         intent=new Intent(MainActivity.this,SocketTestActivity.class);
+                        break;
+                    case 5:
+                        intent=new Intent(MainActivity.this,MuiltyThreadAcitivity.class);
                         break;
                 }
                 startActivity(intent);

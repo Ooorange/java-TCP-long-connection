@@ -120,4 +120,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(0, R.anim.push_right_out);
     }
+
+    protected void setRlLeftContainerVisiablity(boolean visiablity){
+        rl_left_container.setVisibility(visiablity?View.VISIBLE:View.GONE);
+    }
 }

@@ -1,13 +1,13 @@
 package com.example.csdnblog4;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.csdnblog4.net.SocketClient;
+import com.example.csdnblog4.net.TCPLongConnectClient;
 import com.example.csdnblog4.net.UDPDataInteractor;
 
 import butterknife.BindView;
@@ -26,7 +26,8 @@ public class SocketTestActivity extends BaseActivity implements SocketClient.Suc
 
     SocketClient socketClient;
     UDPDataInteractor udpDataInteractor;
-    public static final String[] items={"TCP传输","UDP传输"};
+    TCPLongConnectClient tcpLongConnect;
+    public static final String[] items={"TCP短链接传输","UDP短链接传输","TCP长链接传输"};
     @Override
     int initContentView() {
         return R.layout.activity_main;
@@ -35,7 +36,7 @@ public class SocketTestActivity extends BaseActivity implements SocketClient.Suc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addRadioGroup(items);
-        socketClient = new SocketClient(SocketTestActivity.this);
+//        socketClient = new SocketClient(SocketTestActivity.this);//默认
         rg_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -45,6 +46,9 @@ public class SocketTestActivity extends BaseActivity implements SocketClient.Suc
                         break;
                     case 2:
                         udpDataInteractor = new UDPDataInteractor(SocketTestActivity.this);
+                        break;
+                    case 3:
+                        tcpLongConnect=new TCPLongConnectClient();
                         break;
                 }
             }
@@ -70,7 +74,6 @@ public class SocketTestActivity extends BaseActivity implements SocketClient.Suc
 
     @Override
     public void reciveUDPDataSuccess(String message) {
-        Log.d("orangeRE",message);
         tv_revicerData.setText(message);
     }
 }

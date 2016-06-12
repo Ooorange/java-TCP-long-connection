@@ -34,6 +34,7 @@
         <activity android:name=".FeatureGuidActivity"/>
         <activity android:name=".SocketTestActivity"/>
         <activity android:name=".ShimmerActivity"/>
+        <activity android:name=".MuiltyThreadAcitivity"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="100004" />
