@@ -22,8 +22,18 @@ import java.util.concurrent.Executors;
  */
 public class TCPLongConnectClient {
     ExecutorService executorService= Executors.newCachedThreadPool();
-
+    RequestTask requestTask;
     public TCPLongConnectClient(TCPRequestCallBack tcpRequestCallBack){
-        executorService.execute(new RequestTask(tcpRequestCallBack));
+        requestTask=new RequestTask(tcpRequestCallBack);
+        executorService.execute(requestTask);
+    }
+
+    public void addNewRequest(String data){
+        if (requestTask!=null)
+        requestTask.addRequest(data);
+    }
+
+    public void closeConnect() {
+        requestTask.stop();
     }
 }

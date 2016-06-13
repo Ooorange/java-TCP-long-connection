@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     android:layout_gravity="right"
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/id_tv_left_message"
+        android:id="@+id/tv_myself"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -28,7 +29,7 @@
         android:layout_gravity="center_vertical"
         android:src="@drawable/avator"
         app:civ_border_color="#FFFFFFFF"
-        app:civ_border_overlay="false"
+        app:civ_border_overlay="true"
         app:civ_border_width="2dp" />
 
 </RelativeLayout>

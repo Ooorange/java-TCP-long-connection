@@ -76,6 +76,7 @@ public class SocketUtil {
 
     public static void closeStream(InputStream is){
         try {
+            if (is!=null)
             is.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,6 +85,7 @@ public class SocketUtil {
 
     public static void closeStream(OutputStream os){
         try {
+            if (os!=null)
             os.close();
         } catch (IOException e) {
             e.printStackTrace();

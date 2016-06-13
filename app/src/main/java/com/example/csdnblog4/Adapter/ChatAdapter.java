@@ -29,9 +29,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         if (viewType == ChatContent.GUEST) {
-            return new GuestViewHolder(inflater.inflate(R.layout.left_chater, parent, false));
+            return new GuestViewHolder(inflater.inflate(R.layout.guest, parent, false));
         } else if (viewType == ChatContent.MYSELF) {
-            return new MySelfViewHolder(inflater.inflate(R.layout.right_chater, parent, false));
+            return new MySelfViewHolder(inflater.inflate(R.layout.myself, parent, false));
         }
         return null;
     }
@@ -60,9 +60,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (chatContentList != null)
+        if (chatContentList != null) {
             return chatContentList.get(position).getChatType();
-        else {
+        }else {
             return 0;
         }
     }
@@ -72,7 +72,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return;
         }
         chatContentList.add(chatContent);
-        notifyItemInserted(chatContentList.size());
+        notifyItemInserted(getAdapterSize());
     }
 
     class MySelfViewHolder extends RecyclerView.ViewHolder {
@@ -81,17 +81,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public MySelfViewHolder(View itemView) {
             super(itemView);
-            tvMyself = (TextView) itemView.findViewById(R.id.tv_right_messge);
+            tvMyself = (TextView) itemView.findViewById(R.id.tv_myself);
         }
     }
 
+    public int getAdapterSize(){
+        return chatContentList.size();
+    }
     class GuestViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvGuest;
 
         public GuestViewHolder(View itemView) {
             super(itemView);
-            tvGuest = (TextView) itemView.findViewById(R.id.id_tv_left_message);
+            tvGuest = (TextView) itemView.findViewById(R.id.tv_guest);
         }
     }
 }

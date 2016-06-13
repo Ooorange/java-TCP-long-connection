@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -27,9 +27,10 @@ import butterknife.BindView;
  * Created by orange on 16/6/1.
  */
 public class SocketTestActivity extends BaseActivity implements
-        SocketClient.SuccessCallBack,
-        UDPDataInteractor.SuccessCallBack,
-        TCPRequestCallBack {
+        SocketClient.SuccessCallBack,UDPDataInteractor.SuccessCallBack,
+                 TCPRequestCallBack {
+
+
     @BindView(R.id.ib_send)
     ImageButton ib_send;
     @BindView(R.id.et_messageData)
@@ -45,12 +46,18 @@ public class SocketTestActivity extends BaseActivity implements
     private UDPDataInteractor udpDataInteractor;
     private TCPLongConnectClient tcpLongConnect;
     private ChatAdapter chatAdapter;
+    private RecyclerView.LayoutManager layoutManager;
     private List<ChatContent> chatContentList=new ArrayList<ChatContent>();
+
     public static final String[] items={"TCP短链接","UDP短链接","TCP长链接"};
+
+
     @Override
     int initContentView() {
         return R.layout.activity_sockettest;
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,17 +66,25 @@ public class SocketTestActivity extends BaseActivity implements
         setTitle("聊天中");
     }
 
+
     public void initRecycleView(){
-        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        addMockData(10);
+        addMockData(12);
         chatAdapter=new ChatAdapter(this,chatContentList);
         recyclerView.setAdapter(chatAdapter);
     }
+
+    /**
+     * MYSELF=0;
+        GUEST=1;
+     * @param length
+     */
     private void addMockData(int length){
         for (int i=0;i<length;i++){
-            ChatContent chatContent=new ChatContent(i%2==0?1:0,i%2==0?"我是主人":"我是客人");
+            boolean type=(i%2==0);
+            ChatContent chatContent=new ChatContent(type?ChatContent.MYSELF:ChatContent.GUEST,type?"我是主人":"我是客人");
             chatContentList.add(chatContent);
         }
     }
@@ -84,7 +99,11 @@ public class SocketTestActivity extends BaseActivity implements
                 rg_radioGroup.check(radioButton.getId());
             }
         }
+        addListener();
 
+    }
+
+    public void addListener(){
         rg_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -101,8 +120,21 @@ public class SocketTestActivity extends BaseActivity implements
                 }
             }
         });
-    }
 
+        ib_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String msg=et_messageData.getText().toString().trim();
+                if (tcpLongConnect==null){
+                    return;
+                }
+                tcpLongConnect.addNewRequest(msg);
+                chatAdapter.addMessage(new ChatContent(ChatContent.MYSELF, msg));
+                recyclerView.scrollToPosition(chatAdapter.getAdapterSize() - 1);
+                et_messageData.setText("");
+            }
+        });
+    }
     @Override
     public void reciveDataSuccess(String message) {
         //todo
@@ -115,11 +147,21 @@ public class SocketTestActivity extends BaseActivity implements
 
     @Override
     public void onSuccess(String msg) {
-        Log.d("Onsuccess",msg);
+        setTitle("聊天中");
+        chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, msg));
+        recyclerView.scrollToPosition(chatAdapter.getAdapterSize()-1);
     }
 
     @Override
     public void onFailed(int errorCode, String msg) {
-        Log.d("OnsuccessonFailed",msg);
+        if (errorCode==0)
+        setTitle(msg);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(tcpLongConnect!=null)
+        tcpLongConnect.closeConnect();
     }
 }

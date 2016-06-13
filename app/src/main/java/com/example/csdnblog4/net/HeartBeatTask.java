@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.util.Date;
 
 /**
@@ -14,18 +13,17 @@ import java.util.Date;
 public class HeartBeatTask implements Runnable {
     private static final int REPEATTIME = 4000;
     private volatile boolean isKeepAlive = true;
-    private Socket socket;
     private OutputStream outputStream;
 
-    public HeartBeatTask(Socket socket) {
-        this.socket = socket;
+    public HeartBeatTask(OutputStream outputStream) {
+        this.outputStream = outputStream;
     }
+
 
     @Override
     public void run() {
         try {
             while (isKeepAlive) {
-                outputStream=socket.getOutputStream();
                 SocketUtil.write2Stream("heartBeat", outputStream);
                 try {
                     Thread.sleep(REPEATTIME);
@@ -33,14 +31,14 @@ public class HeartBeatTask implements Runnable {
                     e.printStackTrace();
                 }
             }
-            if (outputStream!=null){
+            if (outputStream != null) {
                 SocketUtil.closeStream(outputStream);
             }
         } catch (IOException e) {
-            Log.d(new Date().toString() , " : Time is out, request" + " has been closed.");
+            Log.d(new Date().toString(), " : Time is out, request" + " has been closed.");
             e.printStackTrace();
-        }finally {
-            if (outputStream!=null){
+        } finally {
+            if (outputStream != null) {
                 SocketUtil.closeStream(outputStream);
             }
         }

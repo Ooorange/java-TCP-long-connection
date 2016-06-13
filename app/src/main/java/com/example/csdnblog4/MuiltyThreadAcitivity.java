@@ -53,6 +53,9 @@ public class MuiltyThreadAcitivity extends BaseActivity {
      * 实现:多个窗口同时卖票;问题:重复卖票;多出卖票
      * 多个线程贡献一个资源:资源可用static标记;当多个线程在操作同一个共享数据时,一个线程对多条语句只执行了一部分
      * ,还没执行完,另一个线程参与进来执行,会导致共享数据的错误,解决办法对操作共享数据的语句加同步
+     * 对同一个资源进行同步需要保存这几个线程所持有的锁是同一个锁
+     * 静态同步函数使用的锁不是this,而是***.class
+     * 死锁出现的原因:同步锁互相嵌套,this要obj,obg要this
      * 实现runnable接口或是继承Thread,实现runnable好处是不会有java单继承的局限性,区别就是存放run方法的位置不一样
      */
     class MuiltyDemo implements Runnable //extends Thread

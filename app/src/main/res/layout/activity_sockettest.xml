@@ -14,13 +14,15 @@
         android:orientation="vertical" />
 
     <android.support.v7.widget.RecyclerView
-
+        android:layout_below="@+id/rg_radioGroup"
         android:id="@+id/rv_recycleviewAdapter"
+        android:layout_above="@+id/rl_message_input_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rg_radioGroup" />
+         />
 
     <RelativeLayout
+        android:id="@+id/rl_message_input_container"
         android:background="@color/white_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
