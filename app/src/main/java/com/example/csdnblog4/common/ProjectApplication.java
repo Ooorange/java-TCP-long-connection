@@ -10,6 +10,7 @@ import com.squareup.leakcanary.LeakCanary;
  */
 public class ProjectApplication extends Application {
     private static Context context;
+    private static String uuid;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -17,10 +18,16 @@ public class ProjectApplication extends Application {
         context=this;
         AppCrashHandler appCrashHandler=new AppCrashHandler();
         Thread.setDefaultUncaughtExceptionHandler(appCrashHandler);
+        uuid=MobileUtils.getUUID(this);
+
     }
 
     public static Context getContext(){
         return context;
+    }
+
+    public static String getUUID(){
+        return uuid;
     }
 
 }

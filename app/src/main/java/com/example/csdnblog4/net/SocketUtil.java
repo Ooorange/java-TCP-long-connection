@@ -2,6 +2,7 @@ package com.example.csdnblog4.net;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,6 +13,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class SocketUtil {
 
+    public static  String UUID="0000 0000 0000 0000 0000 0000 0000 0000";
     /**
      * java.net.SocketException: Connection reset
      引起这个异常的原因有两个：
@@ -25,13 +27,11 @@ public class SocketUtil {
     public static String readFromStream(InputStream inputStream) {
         StringBuilder result = new StringBuilder("");
         BufferedInputStream bufferedInputStream=null;
-        BufferedInputStream contentBufferedInputStream=null;
         byte[] header=new byte[4];
 
         try {
             int len=0;
             bufferedInputStream=new BufferedInputStream(inputStream);
-//            contentBufferedInputStream=new BufferedInputStream(inputStream);
 
             String piece = "";
             int te=0;
@@ -39,9 +39,7 @@ public class SocketUtil {
             while(te<header.length&&te!=-1) {
                 te += bufferedInputStream.read(header, te, header.length);
             }
-
             int lenght=byteArrayToInt(header);
-//            ByteBuffer buffer = ByteBuffer.allocate(lenght);
             len=0;
             byte[] content=new byte[lenght];
             while (len<lenght){
@@ -57,10 +55,10 @@ public class SocketUtil {
         return result.toString();
     }
 
-    public static void write2Stream(String data,OutputStream outputStream) throws UnsupportedEncodingException {
+    public static void write2Stream(String data,String uuid,OutputStream outputStream) throws UnsupportedEncodingException {
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(outputStream);
-        byte[] buffData= data.getBytes("utf-8");
-        byte[] header= int2ByteArrays(buffData.length);
+        byte[] buffData= getContentData(data, uuid);
+        byte[] header= int2ByteArrays(data.getBytes().length);
         try {
             bufferedOutputStream.write(header);
             bufferedOutputStream.flush();
@@ -72,7 +70,12 @@ public class SocketUtil {
 
         }
     }
-
+    public static byte[] getContentData(String contentData,String uuid){
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream(52);
+        byteArrayOutputStream.write(uuid.getBytes(),0,32);
+        byteArrayOutputStream.write(contentData.getBytes(),0,contentData.getBytes().length);
+        return byteArrayOutputStream.toByteArray();
+    }
 
     public static void closeStream(InputStream is){
         try {

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -71,7 +73,7 @@ public class SocketTestActivity extends BaseActivity implements
         layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        addMockData(12);
+        addMockData(6);
         chatAdapter=new ChatAdapter(this,chatContentList);
         recyclerView.setAdapter(chatAdapter);
     }
@@ -148,6 +150,10 @@ public class SocketTestActivity extends BaseActivity implements
     @Override
     public void onSuccess(String msg) {
         setTitle("聊天中");
+        Log.d("orangeRe",msg);
+        if (TextUtils.isEmpty(msg)){
+            return;
+        }
         chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, msg));
         recyclerView.scrollToPosition(chatAdapter.getAdapterSize()-1);
     }

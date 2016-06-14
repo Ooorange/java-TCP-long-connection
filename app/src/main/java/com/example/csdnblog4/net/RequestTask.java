@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import com.example.csdnblog4.common.ProjectApplication;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +32,7 @@ public class RequestTask implements Runnable {
     private SendTask sendTask;
     private ReciverTask reciverTask;
     HeartBeatTask heartBeatTask = null;
+    private String uuid;
     private ExecutorService executorService;
     Socket socket = null;
     protected volatile ConcurrentLinkedQueue<String> requsetData = new ConcurrentLinkedQueue<String>();
@@ -42,6 +45,7 @@ public class RequestTask implements Runnable {
 
     @Override
     public void run() {
+        uuid= ProjectApplication.getUUID();
         try {
             failedMessage(0,"服务器连接中");
             socket = SocketFactory.getDefault().createSocket("172.16.101.148", 9012);
@@ -55,7 +59,7 @@ public class RequestTask implements Runnable {
             reciverTask.start();
 
             if (isLongConnection) {
-                heartBeatTask = new HeartBeatTask(sendTask.outputStreamSend);
+                heartBeatTask = new HeartBeatTask(sendTask.outputStreamSend,uuid);
                 executorService=Executors.newCachedThreadPool();
                 executorService.execute(heartBeatTask);
             }
@@ -140,7 +144,7 @@ public class RequestTask implements Runnable {
         public void run() {
             super.run();
             while (!isCancle){
-                if (socket.isClosed()){
+                if (socket.isClosed()||!socket.isConnected()){
                     isCancle=true;
                     if (heartBeatTask!=null)
                     heartBeatTask.setKeepAlive(false);
@@ -179,7 +183,7 @@ public class RequestTask implements Runnable {
                             RequestTask.this.stop();
                             break;
                         }
-                        SocketUtil.write2Stream(dataContent, outputStreamSend);
+                        SocketUtil.write2Stream(dataContent,uuid, outputStreamSend);
                     }
 
                 } catch (UnsupportedEncodingException e) {

@@ -14,9 +14,10 @@ public class HeartBeatTask implements Runnable {
     private static final int REPEATTIME = 4000;
     private volatile boolean isKeepAlive = true;
     private OutputStream outputStream;
-
-    public HeartBeatTask(OutputStream outputStream) {
+    private String uuid;
+    public HeartBeatTask(OutputStream outputStream,String uuid) {
         this.outputStream = outputStream;
+        this.uuid=uuid;
     }
 
 
@@ -24,7 +25,7 @@ public class HeartBeatTask implements Runnable {
     public void run() {
         try {
             while (isKeepAlive) {
-                SocketUtil.write2Stream("heartBeat", outputStream);
+                SocketUtil.write2Stream("heartBeat", uuid,outputStream);
                 try {
                     Thread.sleep(REPEATTIME);
                 } catch (InterruptedException e) {
