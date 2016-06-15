@@ -1,12 +1,13 @@
 package com.example.csdnblog4.net;
 
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by orange on 16/6/8.
@@ -55,7 +56,8 @@ public class SocketUtil {
         return result.toString();
     }
 
-    public static void write2Stream(String data,String uuid,OutputStream outputStream) throws UnsupportedEncodingException {
+    public static synchronized void write2Stream(String data,String uuid,OutputStream outputStream)  {
+        Log.d("orangeW",data+"<<"+uuid);
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(outputStream);
         byte[] buffData= getContentData(data, uuid);
         byte[] header= int2ByteArrays(data.getBytes().length);

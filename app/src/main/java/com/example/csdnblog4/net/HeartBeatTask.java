@@ -2,7 +2,6 @@ package com.example.csdnblog4.net;
 
 import android.util.Log;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 
@@ -35,7 +34,7 @@ public class HeartBeatTask implements Runnable {
             if (outputStream != null) {
                 SocketUtil.closeStream(outputStream);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.d(new Date().toString(), " : Time is out, request" + " has been closed.");
             e.printStackTrace();
         } finally {

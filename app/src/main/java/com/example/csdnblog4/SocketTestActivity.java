@@ -149,7 +149,7 @@ public class SocketTestActivity extends BaseActivity implements
 
     @Override
     public void onSuccess(String msg) {
-        setTitle("聊天中");
+        setTitle("连接成功");
         Log.d("orangeRe",msg);
         if (TextUtils.isEmpty(msg)){
             return;
