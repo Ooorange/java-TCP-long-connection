@@ -3,6 +3,9 @@ package socketserver;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.plaf.TextUI;
 
 /**
  * 在复杂的业务中，比如说车钥匙，会有接收消息队列以及发送的消息队列，作为两个独立的线程去操作，
@@ -17,9 +20,15 @@ public class TCPLongConnectServerHandlerData implements Runnable {
     private static final int TIMEOUT=5000;
     private OutputStream outputStream=null;
     private InputStream inputStream=null;
-    public TCPLongConnectServerHandlerData(Socket socket,int requesetId){
+    
+	private volatile String chatContent="";
+	private volatile String clientID="";
+    private TCPResultCallBack tBack;
+    
+    public TCPLongConnectServerHandlerData(Socket socket,int requesetId,TCPResultCallBack tBack){
         this.socket=socket;
         this.requestId=requesetId;
+        this.tBack=tBack;
     }
     @Override
     public void run() {
@@ -35,18 +44,29 @@ public class TCPLongConnectServerHandlerData implements Runnable {
                 	if(inputStream==null){
                 		System.out.println("输入流为空－－－－－－－－－－－－－－－－－－－－");
                 	}
-                    String clientData=SocketUtil.readFromStream(inputStream);
-                    if(clientData.isEmpty()){
+                	
+                    Procotol clientData=SocketUtil.readFromStream(inputStream);
+                    if(clientData==null){
                     	SocketUtil.closeStream(outputStream);
                     	return;
                     }
-                    System.out.println("客户端数据:"+clientData);
+                    clientID=clientData.getUuid();
+                    chatContent=clientData.getContent();
+                    if(clientID!=null&&!clientID.isEmpty()){
+                    	if(chatContent!=null&&!chatContent.isEmpty()){
+                    		if(tBack!=null)
+                    		tBack.connectSuccess(clientID,chatContent);
+                        }
+                    }
+                    
+                    System.out.println("客户端:"+clientID+"说:"+chatContent);
                     outputStream=socket.getOutputStream();
                     
                     if(outputStream==null||inputStream==null){
                     	System.out.println("输入出流为空－－－－－－－－－－－－－－－－－－－－");
                     }
-                    if (clientData.contains("heartBeat")){
+                    if (chatContent.contains("heartBeat")){
+                    	requestId++;
                         SocketUtil.write2Stream("收到你的心跳了...,id:"+requestId,outputStream);
                     }else {
                         SocketUtil.write2Stream("hello my friend"
@@ -83,4 +103,13 @@ public class TCPLongConnectServerHandlerData implements Runnable {
         }
         
     }
+    
+    public void setTcpResultCallBack(TCPResultCallBack tBack){
+    	this.tBack=tBack;
+    }
+    
+    public interface TCPResultCallBack{
+    	public void connectSuccess(String clientId,String clientMessage);
+    }
+    
 }

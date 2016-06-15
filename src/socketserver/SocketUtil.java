@@ -17,64 +17,81 @@ import java.net.Socket;
 public class SocketUtil {
 
 	/**
-	 * 注意,并没有关闭输入输出流
+	 * 并没有关闭输入输出流
 	 * 
 	 * @param inputStream
 	 * @return
 	 */
-	public static String readFromStream(InputStream inputStream) {
+	public static  Procotol readFromStream(InputStream inputStream) {
+		Procotol procotol=new Procotol();
 		StringBuilder result = new StringBuilder("");
 		BufferedInputStream bufferedReader = null;
 		try {
 			bufferedReader = new BufferedInputStream(inputStream);
 			byte[] header = new byte[4];
-			byte[] contentData = new byte[1024];
+			
 			int length = bufferedReader.read(header, 0, header.length);
+			length=byteArrayToInt(header);
+			byte[] contentData = new byte[1024];
+			
+			
 			if(length==-1){
-				return "";
+				return null;
 			}
 			int readedLen = 0;
 			while (readedLen < length) {
-				int temp = bufferedReader.read(contentData, 4, contentData.length - 4);
+				int temp = bufferedReader.read(contentData,0, contentData.length);
 				readedLen = temp + readedLen;
 				String readChar = new String(contentData, 0, contentData.length);
 				result.append(readChar);
 			}
+			String content=result.toString().substring(32,readedLen);
+			String uuid=result.toString().substring(0, 32);
+			System.out.println("用户数据:"+content+"   用户ID:"+uuid);
+			procotol.setContent(content);
+			procotol.setUuid(uuid);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "";
+			return null;
 		} 
 
-		return result.toString();
+		return procotol;
 	}
 
 	/**
+	 * 
 	 * 向客户端写数据
 	 * 
 	 * @param data
 	 * @param socket
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void write2Stream(String data, OutputStream outputStrea) throws UnsupportedEncodingException {
-		BufferedOutputStream outputStream = null;
+	public static  void write2Stream(String data, OutputStream outputStrea) {
+		BufferedOutputStream outputStream = new BufferedOutputStream(outputStrea);
 
-		outputStream = new BufferedOutputStream(outputStrea);
-
-		byte[] buffData = data.getBytes("utf-8");// 28length
-		byte[] header = int2ByteArrays(buffData.length);// headerLen:4
+		byte[] buffData;
 		try {
-			outputStream.write(header);
-			outputStream.flush();
-			outputStream.write(buffData, 0, buffData.length);
-			outputStream.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+			buffData = data.getBytes("utf-8");
+			// 28length
+			byte[] header = int2ByteArrays(buffData.length);// headerLen:4
+			try {
+				outputStream.write(header);
+				outputStream.flush();
+				outputStream.write(buffData, 0, buffData.length);
+				outputStream.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 	}
 
 	public static void closeStream(InputStream is) {
 		try {
+			if(is!=null)
 			is.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -83,6 +100,7 @@ public class SocketUtil {
 
 	public static void closeStream(OutputStream os) {
 		try {
+			if(os!=null)
 			os.close();
 		} catch (IOException e) {
 			e.printStackTrace();
