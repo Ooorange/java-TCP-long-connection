@@ -32,76 +32,76 @@ public class TCPLongConnectServerHandlerData implements Runnable {
     }
     @Override
     public void run() {
-        try {
-            socket.setSoTimeout(TIMEOUT);
-
-            while (true){
-                try {
-                	if(socket.isClosed()){
-                		return;
-                	}
-                	inputStream=socket.getInputStream();
-                	if(inputStream==null){
-                		System.out.println("输入流为空－－－－－－－－－－－－－－－－－－－－");
-                	}
-                	
-                    Procotol clientData=SocketUtil.readFromStream(inputStream);
-                    if(clientData==null){
-                    	SocketUtil.closeStream(outputStream);
-                    	return;
-                    }
-                    clientID=clientData.getUuid();
-                    chatContent=clientData.getContent();
-                    if(clientID!=null&&!clientID.isEmpty()){
-                    	if(chatContent!=null&&!chatContent.isEmpty()){
-                    		if(tBack!=null)
-                    		tBack.connectSuccess(clientID,chatContent);
-                        }
-                    }
-                    
-                    System.out.println("客户端:"+clientID+"说:"+chatContent);
-                    outputStream=socket.getOutputStream();
-                    
-                    if(outputStream==null||inputStream==null){
-                    	System.out.println("输入出流为空－－－－－－－－－－－－－－－－－－－－");
-                    }
-                    if (chatContent.contains("heartBeat")){
-                    	requestId++;
-                        SocketUtil.write2Stream("收到你的心跳了...,id:"+requestId,outputStream);
-                    }else {
-                        SocketUtil.write2Stream("hello my friend"
-                        		+ "",outputStream);
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                	System.out.println("断开异常");
-                    e.printStackTrace();
-                }
-            }
-            
-        } catch (Exception e) {
-        	System.out.println("time is out: "+requestId);
-        	if(outputStream!=null){
-        		SocketUtil.closeStream(outputStream);
-        	}
-        	if(inputStream!=null){
-            	System.out.println("closeInputStream");
-            	SocketUtil.closeStream(inputStream);
-            }
-        	
-        }
-        if(outputStream!=null){
-    		SocketUtil.closeStream(outputStream);
-    	}
-    	if(inputStream!=null){
-        	System.out.println("closeInputStream");
-        	SocketUtil.closeStream(inputStream);
-        }
-        
+//        try {
+//            socket.setSoTimeout(TIMEOUT);
+//
+//            while (true){
+//                try {
+//                	if(socket.isClosed()){
+//                		return;
+//                	}
+//                	inputStream=socket.getInputStream();
+//                	if(inputStream==null){
+//                		System.out.println("输入流为空－－－－－－－－－－－－－－－－－－－－");
+//                	}
+//                	
+//                    Protocol clientData=SocketUtil.readFromStream(inputStream);
+//                    if(clientData==null){
+//                    	SocketUtil.closeStream(outputStream);
+//                    	return;
+//                    }
+//                    clientID=clientData.getSelfUUid();
+//                    chatContent=clientData.getMessage();
+//                    if(clientID!=null&&!clientID.isEmpty()){
+//                    	if(chatContent!=null&&!chatContent.isEmpty()){
+//                    		if(tBack!=null)
+//                    		tBack.connectSuccess(clientID,chatContent);
+//                        }
+//                    }
+//                    
+//                    System.out.println("客户端:"+clientID+"说:"+chatContent);
+//                    outputStream=socket.getOutputStream();
+//                    
+//                    if(outputStream==null||inputStream==null){
+//                    	System.out.println("输入出流为空－－－－－－－－－－－－－－－－－－－－");
+//                    }
+//                    if (chatContent.contains("heartBeat")){
+//                    	requestId++;
+//                        SocketUtil.write2Stream("收到你的心跳了...,id:"+requestId,outputStream);
+//                    }else {
+//                        SocketUtil.write2Stream("hello my friend"
+//                        		+ "",outputStream);
+//                    }
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                } catch (Exception e) {
+//                	System.out.println("断开异常");
+//                    e.printStackTrace();
+//                }
+//            }
+//            
+//        } catch (Exception e) {
+//        	System.out.println("time is out: "+requestId);
+//        	if(outputStream!=null){
+//        		SocketUtil.closeStream(outputStream);
+//        	}
+//        	if(inputStream!=null){
+//            	System.out.println("closeInputStream");
+//            	SocketUtil.closeStream(inputStream);
+//            }
+//        	
+//        }
+//        if(outputStream!=null){
+//    		SocketUtil.closeStream(outputStream);
+//    	}
+//    	if(inputStream!=null){
+//        	System.out.println("closeInputStream");
+//        	SocketUtil.closeStream(inputStream);
+//        }
+//        
     }
     
     public void setTcpResultCallBack(TCPResultCallBack tBack){
@@ -109,7 +109,7 @@ public class TCPLongConnectServerHandlerData implements Runnable {
     }
     
     public interface TCPResultCallBack{
-    	public void connectSuccess(String clientId,String clientMessage);
+    	public void connectSuccess(Protocol reciveMsg);
     }
     
 }

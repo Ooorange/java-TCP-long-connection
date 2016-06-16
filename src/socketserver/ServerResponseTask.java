@@ -16,7 +16,7 @@ public class ServerResponseTask implements Runnable {
     private ServerWriteTask serverWriteTask;
     private Socket socket;//新加入的客户端
     private TCPResultCallBack tBack;
-    private volatile ConcurrentLinkedQueue<Procotol> reciverData= new ConcurrentLinkedQueue<Procotol>();
+    private volatile ConcurrentLinkedQueue<Protocol> reciverData= new ConcurrentLinkedQueue<Protocol>();
     
     public ServerResponseTask(Socket socket,TCPResultCallBack tBack){
         this.socket=socket;
@@ -52,11 +52,12 @@ public class ServerResponseTask implements Runnable {
         @Override
         public void run() {
             while (!isCancle){
-            	Procotol procotol=reciverData.poll();
+            	Protocol procotol=reciverData.poll();
             	if(procotol==null){
             		toWaitAll(reciverData);
-				} else {
-					SocketUtil.write2Stream(procotol.getContent(), outputStream);// TODO
+				} else {	
+					System.out.println("Wri------:"+procotol.toString());
+					SocketUtil.write2Stream(procotol, outputStream);// TODO
 				}
             }
 
@@ -71,21 +72,16 @@ public class ServerResponseTask implements Runnable {
         @Override
         public void run() {
             while (!isCancle){
-            	Procotol clientData=SocketUtil.readFromStream(inputStream);
+            	Protocol clientData=SocketUtil.readFromStream(inputStream);
                 if(clientData==null){
                 	isCancle=true;
                 	return;
                 }
                 reciverData.offer(clientData);
                 toNotifyAll(reciverData);
-                if(clientData.getContent()!=null&&!clientData.getContent().isEmpty()){
-                	if(clientData.getUuid()!=null&&!clientData.getUuid().isEmpty()){
-//                		System.out.println("用户ID:"+clientData.getUuid()+"用户端信息:"+clientData.getContent());
-                		if(tBack!=null){
-                			tBack.connectSuccess(clientData.getUuid(),clientData.getContent());
-                		}
-                    }
-                }
+                if(tBack!=null&&clientData!=null){
+        			tBack.connectSuccess(clientData);
+        		}
             }
             SocketUtil.closeStream(inputStream);
         }
@@ -101,7 +97,7 @@ public class ServerResponseTask implements Runnable {
 		}
     }
     
-    public synchronized void addWriteTask(Procotol procotol,Socket targetClient ){
+    public synchronized void addWriteTask(Protocol procotol,Socket targetClient ){
     	reciverData.offer(procotol);
     	try {
 			serverWriteTask.outputStream=new DataOutputStream(targetClient.getOutputStream());
