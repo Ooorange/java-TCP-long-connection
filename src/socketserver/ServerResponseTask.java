@@ -16,8 +16,7 @@ public class ServerResponseTask implements Runnable {
     private ServerWriteTask serverWriteTask;
     private Socket socket;//新加入的客户端
     private TCPResultCallBack tBack;
-    private Socket targetClient;
-    private ConcurrentLinkedQueue<Procotol> reciverData= new ConcurrentLinkedQueue<Procotol>();
+    private volatile ConcurrentLinkedQueue<Procotol> reciverData= new ConcurrentLinkedQueue<Procotol>();
     
     public ServerResponseTask(Socket socket,TCPResultCallBack tBack){
         this.socket=socket;
@@ -88,7 +87,6 @@ public class ServerResponseTask implements Runnable {
                     }
                 }
             }
-            
             SocketUtil.closeStream(inputStream);
         }
     }
@@ -103,9 +101,8 @@ public class ServerResponseTask implements Runnable {
 		}
     }
     
-    public void addWriteTask(Procotol procotol,Socket targetClient ){
+    public synchronized void addWriteTask(Procotol procotol,Socket targetClient ){
     	reciverData.offer(procotol);
-    	this.targetClient=targetClient;
     	try {
 			serverWriteTask.outputStream=new DataOutputStream(targetClient.getOutputStream());
 		} catch (IOException e) {
