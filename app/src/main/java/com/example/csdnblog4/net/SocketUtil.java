@@ -1,18 +1,27 @@
 package com.example.csdnblog4.net;
 
+import android.util.Log;
+
+import com.example.csdnblog4.common.ProjectApplication;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Created by orange on 16/6/8.
  */
 public class SocketUtil {
 
-    public static  String UUID="0000 0000 0000 0000 0000 0000 0000 0000";
+    public static final int CLIENT_UUID=32;
+    public static final int MSGTARGETCLIENT_UUID_LEN=32;
+    public static final int CLIENT_VERSION_LEN=4;
+
+
     /**
      * java.net.SocketException: Connection reset
      引起这个异常的原因有两个：
@@ -23,60 +32,77 @@ public class SocketUtil {
      * @param inputStream
      * @return
      */
-    public static String readFromStream(InputStream inputStream) throws SocketExceptions{
-        StringBuilder result = new StringBuilder("");
-        BufferedInputStream bufferedInputStream=null;
-        byte[] header=new byte[4];
-
+    public static Protocol readFromStream(InputStream inputStream) throws SocketExceptions{
+        Protocol protocol=new Protocol();
+        BufferedInputStream bis;
+        int pos=CLIENT_VERSION_LEN;
+        byte[] header=new byte[CLIENT_VERSION_LEN];
         try {
+
+            bis=new BufferedInputStream(inputStream);
+
             int len=0;
-            bufferedInputStream=new BufferedInputStream(inputStream);
+            int temp=0;
 
-            String piece = "";
-            int te=0;
-
-            while(te<header.length&&te!=-1) {
-                te += bufferedInputStream.read(header, te, header.length);
-                if (te==-1){
-                    throw new SocketExceptions("serverHasClosed");
+            while(len<header.length) {
+                if((temp = bis.read(header, len, header.length-len))>0){
+                    len+=temp;
                 }
             }
-            int lenght=byteArrayToInt(header);
+
+            int length=byteArrayToInt(header);
             len=0;
-            byte[] content=new byte[lenght];
-            while (len<lenght){
-                len+=bufferedInputStream.read(content,len,content.length);
+            temp=0;
+
+            byte[] content=new byte[length];
+            while (len<length){
+                if((temp=bis.read(content,len,content.length-len))>0){
+                    len+=temp;
+                }
             }
-            piece=new String(content,0,lenght,"utf-8");
-            result.append(piece);
+
+            protocol.setClientVersion(bytes2Int(content,0));
+            protocol.setMsgTargetUUID(new String(content, pos, MSGTARGETCLIENT_UUID_LEN));
+            pos+=MSGTARGETCLIENT_UUID_LEN;
+            protocol.setMessage(new String(content,pos,content.length-pos));
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
 
-        return result.toString();
+        return protocol;
     }
 
-    public static  void write2Stream(String data,String uuid,OutputStream outputStream)  {
+    public static  void writeContent2Stream(Protocol protocol, OutputStream outputStream)  {
+        protocol.setMsgTargetUUID("4c37987f8e13461dbf0c133af338c039");//小米
+        protocol.setClientVersion(ProjectApplication.versionID);
+        protocol.setSelfUUid(ProjectApplication.getUUID());
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(outputStream);
-        byte[] buffData= getContentData(data, uuid);
-        byte[] header= int2ByteArrays(data.getBytes().length);
+        byte[] buffData= getContentData(protocol);
+
+        byte[] header= int2ByteArrays(buffData.length);
         try {
             bufferedOutputStream.write(header);
-            bufferedOutputStream.flush();
-            bufferedOutputStream.write(buffData,0,buffData.length);
+            bufferedOutputStream.write(buffData);
             bufferedOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-
         }
+        Log.d("orangeWr",protocol.toString());
     }
-    public static byte[] getContentData(String contentData,String uuid){
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream(52);
-        byteArrayOutputStream.write(uuid.getBytes(),0,32);
-        byteArrayOutputStream.write(contentData.getBytes(),0,contentData.getBytes().length);
-        return byteArrayOutputStream.toByteArray();
+
+    //协议包体
+    public static byte[] getContentData(Protocol protocol){
+        ByteArrayOutputStream baos=new ByteArrayOutputStream(CLIENT_UUID+MSGTARGETCLIENT_UUID_LEN+CLIENT_VERSION_LEN);
+
+        baos.write(int2ByteArrays(protocol.getClientVersion()), 0, CLIENT_VERSION_LEN);
+        baos.write(protocol.getSelfUUid().getBytes(), 0, CLIENT_UUID);
+        baos.write(protocol.getMsgTargetUUID().getBytes(), 0, MSGTARGETCLIENT_UUID_LEN);
+        byte[] msg=protocol.getMessage().getBytes();
+        baos.write(msg, 0, msg.length);
+
+        return baos.toByteArray();
     }
 
     public static void closeStream(InputStream is){
@@ -106,13 +132,18 @@ public class SocketUtil {
         return result;
     }
 
-
-    //字节数组转int
     public static int byteArrayToInt(byte[] b) {
         int intValue=0;
         for(int i=0;i<b.length;i++){
             intValue +=(b[i] & 0xFF)<<(8*(3-i));
         }
         return intValue;
+    }
+
+    public static int bytes2Int(byte[]b ,int offset){
+        ByteBuffer byteBuffer=ByteBuffer.allocate(Integer.SIZE/Byte.SIZE);
+        byteBuffer.put(b,offset,4);
+        byteBuffer.flip();
+        return byteBuffer.getInt();
     }
 }

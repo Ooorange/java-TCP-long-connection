@@ -98,6 +98,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="jackson-all-1.9.0" level="project" />
     <orderEntry type="library" exported="" name="haha-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="leakcanary-analyzer-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="design-23.3.0" level="project" />

@@ -3,7 +3,6 @@ package com.example.csdnblog4.net;
 import android.util.Log;
 
 import java.io.OutputStream;
-import java.util.Date;
 
 /**
  * 实现5秒的定时发送一个心跳
@@ -24,7 +23,7 @@ public class HeartBeatTask implements Runnable {
     public void run() {
         try {
             while (isKeepAlive) {
-                SocketUtil.write2Stream("heartBeat", uuid,outputStream);
+                SocketUtil.writeContent2Stream(new Protocol("heartBeat"), outputStream);
                 try {
                     Thread.sleep(REPEATTIME);
                 } catch (InterruptedException e) {
@@ -35,7 +34,7 @@ public class HeartBeatTask implements Runnable {
                 SocketUtil.closeStream(outputStream);
             }
         } catch (Exception e) {
-            Log.d(new Date().toString(), " : Time is out, request" + " has been closed.");
+            Log.d("exception", " : Time is out, request" + " has been closed.");
             e.printStackTrace();
         } finally {
             if (outputStream != null) {

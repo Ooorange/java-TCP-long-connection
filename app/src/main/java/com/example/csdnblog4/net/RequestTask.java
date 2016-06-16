@@ -40,8 +40,8 @@ public class RequestTask implements Runnable {
     private String uuid;
     private ExecutorService executorService;
     Socket socket = null;
-    protected volatile ConcurrentLinkedQueue<String> sendData = new ConcurrentLinkedQueue<String>();
-    protected volatile ConcurrentLinkedQueue<String> reciveDatas = new ConcurrentLinkedQueue<String>();
+    protected volatile ConcurrentLinkedQueue<Protocol> sendData = new ConcurrentLinkedQueue<Protocol>();
+    protected volatile ConcurrentLinkedQueue<Protocol> reciveDatas = new ConcurrentLinkedQueue<Protocol>();
 
     public RequestTask(TCPRequestCallBack tcpRequestCallBacks) {
         this.tcpRequestCallBack = tcpRequestCallBacks;
@@ -57,6 +57,7 @@ public class RequestTask implements Runnable {
                 socket = SocketFactory.getDefault().createSocket(ADDRESS, PORT);
             }catch (ConnectException e){
                 failedMessage(-1,"服务区器连接异常,请检查网络");
+                return;
             }
             sendTask=new SendTask();
 
@@ -86,14 +87,14 @@ public class RequestTask implements Runnable {
         handler.sendMessage(message);
     }
 
-    private void successMessage(String data) {
+    private void successMessage(Protocol protocol) {
         Message message = handler.obtainMessage(SUCCESS);
         message.what = SUCCESS;
-        message.obj = data;
+        message.obj = protocol.getMessage();
         handler.sendMessage(message);
     }
 
-    public void addRequest(String data) {
+    public void addRequest(Protocol data) {
         sendData.add(data);
     }
 
@@ -156,16 +157,14 @@ public class RequestTask implements Runnable {
 
         @Override
         public void run() {
-            Log.d("orangeRead","run:"+isCancle);
             while (!isCancle) {
-                Log.d("orangeRead","runWhileIn:"+isCancle);
                 if (socket.isClosed() || !socket.isConnected()) {
                     isCancle = true;
                     RequestTask.this.stop();
                     break;
                 }
                 try {
-                    String reciverData = SocketUtil.readFromStream(inputStreamReciver);
+                    Protocol reciverData = SocketUtil.readFromStream(inputStreamReciver);
                     if (reciverData != null) {
                         successMessage(reciverData);
                         reciveDatas.offer(reciverData);
@@ -192,7 +191,7 @@ public class RequestTask implements Runnable {
         @Override
         public void run() {
             while (!isCancle) {
-                String dataContent = sendData.poll();
+                Protocol dataContent = sendData.poll();
                 if (dataContent == null) {
                     toWait(sendData);
                 } else {
@@ -203,7 +202,7 @@ public class RequestTask implements Runnable {
                     }else {
                         if (outputStreamSend!=null) {
                             synchronized (outputStreamSend) {
-                                SocketUtil.write2Stream(dataContent, uuid, outputStreamSend);
+                                SocketUtil.writeContent2Stream(dataContent, outputStreamSend);
                             }
                         }
                     }

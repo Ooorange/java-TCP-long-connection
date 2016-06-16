@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 
 import com.example.csdnblog4.Adapter.ChatAdapter;
 import com.example.csdnblog4.Entity.ChatContent;
+import com.example.csdnblog4.net.Protocol;
 import com.example.csdnblog4.net.SocketClient;
 import com.example.csdnblog4.net.TCPLongConnectClient;
 import com.example.csdnblog4.net.TCPRequestCallBack;
@@ -129,7 +130,9 @@ public class SocketTestActivity extends BaseActivity implements
                 if (tcpLongConnect==null){
                     return;
                 }
-                tcpLongConnect.addNewRequest(msg);
+                Protocol protocol=new Protocol();
+                protocol.setMessage(msg);
+                tcpLongConnect.addNewRequest(protocol);
                 chatAdapter.addMessage(new ChatContent(ChatContent.MYSELF, msg));
                 recyclerView.scrollToPosition(chatAdapter.getAdapterSize() - 1);
                 et_messageData.setText("");

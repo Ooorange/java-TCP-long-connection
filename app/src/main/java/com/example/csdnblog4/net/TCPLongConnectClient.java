@@ -34,7 +34,7 @@ public class TCPLongConnectClient {
         executorService.execute(requestTask);
     }
 
-    public void addNewRequest(String data){
+    public void addNewRequest(Protocol data){
         if (requestTask!=null)
         requestTask.addRequest(data);
     }

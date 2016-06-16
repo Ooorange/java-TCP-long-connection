@@ -2,6 +2,8 @@ package com.example.csdnblog4.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import com.squareup.leakcanary.LeakCanary;
 
@@ -11,6 +13,7 @@ import com.squareup.leakcanary.LeakCanary;
 public class ProjectApplication extends Application {
     private static Context context;
     private static String uuid;
+    public static int versionID=-1;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,6 +23,19 @@ public class ProjectApplication extends Application {
         Thread.setDefaultUncaughtExceptionHandler(appCrashHandler);
         uuid=MobileUtils.getUUID(this);
 
+        PackageInfo info = null;
+        try {
+            info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (info != null)
+            versionID = info.versionCode;
+
+    }
+
+    public static void setContext(Context context) {
+        ProjectApplication.context = context;
     }
 
     public static Context getContext(){
