@@ -5,7 +5,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -150,7 +149,7 @@ public class SocketTestActivity extends BaseActivity implements
     @Override
     public void onSuccess(String msg) {
         setTitle("连接成功");
-        Log.d("orangeRe",msg);
+//        Log.d("orangeRe",msg);
         if (TextUtils.isEmpty(msg)){
             return;
         }

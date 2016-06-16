@@ -3,12 +3,14 @@ package com.example.csdnblog4.net;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.example.csdnblog4.common.ProjectApplication;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -17,12 +19,16 @@ import java.util.concurrent.Executors;
 import javax.net.SocketFactory;
 
 /**
- * 发送数据,并且启动心跳,连续发送3次数据
+ *
+ *
+ * 因为写消息用的是一个死循环,当没有数据的时候就不需要进行写操作了,直接wait,当有消息来时就notify
+ *
  * Created by orange on 16/6/8.
+ *
  */
 public class RequestTask implements Runnable {
     private static final String ADDRESS = "172.16.101.148";
-    private static final int PORT = 9012;
+    private static final int PORT = 9013;
     private static final int SUCCESS = 100;
     private static final int FAILED = -1;
     private boolean isLongConnection = true;
@@ -34,8 +40,8 @@ public class RequestTask implements Runnable {
     private String uuid;
     private ExecutorService executorService;
     Socket socket = null;
-    protected volatile ConcurrentLinkedQueue<String> requsetData = new ConcurrentLinkedQueue<String>();
-    protected ConcurrentLinkedQueue<String> reciverDatas = new ConcurrentLinkedQueue<String>();
+    protected volatile ConcurrentLinkedQueue<String> sendData = new ConcurrentLinkedQueue<String>();
+    protected volatile ConcurrentLinkedQueue<String> reciveDatas = new ConcurrentLinkedQueue<String>();
 
     public RequestTask(TCPRequestCallBack tcpRequestCallBacks) {
         this.tcpRequestCallBack = tcpRequestCallBacks;
@@ -47,7 +53,11 @@ public class RequestTask implements Runnable {
         uuid = ProjectApplication.getUUID();
         try {
             failedMessage(0,"服务器连接中");
-            socket = SocketFactory.getDefault().createSocket(ADDRESS, 9013);
+            try {
+                socket = SocketFactory.getDefault().createSocket(ADDRESS, PORT);
+            }catch (ConnectException e){
+                failedMessage(-1,"服务区器连接异常,请检查网络");
+            }
             sendTask=new SendTask();
 
             sendTask.outputStreamSend = socket.getOutputStream();
@@ -84,10 +94,12 @@ public class RequestTask implements Runnable {
     }
 
     public void addRequest(String data) {
-        requsetData.add(data);
+        sendData.add(data);
     }
 
     public void stop() {
+        toNotifyAll(sendData);
+
         if (sendTask != null) {
             sendTask.interrupt();
             sendTask.isCancle = true;
@@ -97,7 +109,6 @@ public class RequestTask implements Runnable {
                 }
             }
             sendTask = null;
-//            toNotifyAll(requsetData);
         }
 
         if (reciverTask != null) {
@@ -106,10 +117,8 @@ public class RequestTask implements Runnable {
             if (reciverTask.inputStreamReciver != null) {
                 SocketUtil.closeStream(reciverTask.inputStreamReciver);
                 reciverTask.inputStreamReciver = null;
-
             }
             reciverTask = null;
-//            toNotifyAll(reciverDatas);
         }
 
         if (executorService != null) {
@@ -131,11 +140,15 @@ public class RequestTask implements Runnable {
     }
 
     private void clearConnection() {
-        requsetData.clear();
-        reciverDatas.clear();
+        sendData.clear();
+        reciveDatas.clear();
         isLongConnection = false;
     }
 
+
+    /**
+     * read...
+     */
     public class ReciverTask extends Thread {
 
         InputStream inputStreamReciver;
@@ -143,57 +156,63 @@ public class RequestTask implements Runnable {
 
         @Override
         public void run() {
-            super.run();
+            Log.d("orangeRead","run:"+isCancle);
             while (!isCancle) {
+                Log.d("orangeRead","runWhileIn:"+isCancle);
                 if (socket.isClosed() || !socket.isConnected()) {
                     isCancle = true;
-                    if (heartBeatTask != null)
-                        heartBeatTask.setKeepAlive(false);
                     RequestTask.this.stop();
-                    return;
+                    break;
                 }
-                String reciverData = SocketUtil.readFromStream(inputStreamReciver);
-                if (reciverData != null) {
-                    successMessage(reciverData);
-                    reciverDatas.offer(reciverData);
-//                    toNotifyAll(reciverDatas);
-//                    toNotifyAll(requsetData);
+                try {
+                    String reciverData = SocketUtil.readFromStream(inputStreamReciver);
+                    if (reciverData != null) {
+                        successMessage(reciverData);
+                        reciveDatas.offer(reciverData);
+                        toNotifyAll(sendData);
+                    }
+                }catch (SocketExceptions e){
+                    Log.d("orangeExce","server close");
+                    isCancle=true;
+                    heartBeatTask.setKeepAlive(false);
+                    RequestTask.this.stop();
                 }
+
             }
             SocketUtil.closeStream(inputStreamReciver);
         }
     }
 
 
+    //write
     public class SendTask extends Thread {
         private boolean isCancle = false;
         private OutputStream outputStreamSend;
 
         @Override
         public void run() {
-            super.run();
             while (!isCancle) {
-                String dataContent = requsetData.poll();
+                String dataContent = sendData.poll();
                 if (dataContent == null) {
-                    isCancle=false;
-//                    toWait(requsetData);
+                    toWait(sendData);
                 } else {
                     if (socket.isClosed()) {
                         isCancle = true;
-                        if (heartBeatTask != null)
-                            heartBeatTask.setKeepAlive(false);
                         RequestTask.this.stop();
                         break;
                     }else {
-                        isCancle=false;
+                        if (outputStreamSend!=null) {
+                            synchronized (outputStreamSend) {
+                                SocketUtil.write2Stream(dataContent, uuid, outputStreamSend);
+                            }
+                        }
                     }
-                    SocketUtil.write2Stream(dataContent, uuid, outputStreamSend);
                 }
-
             }
             SocketUtil.closeStream(outputStreamSend);
         }
     }
+
 
     private void toWait(Object o) {
         synchronized (o) {

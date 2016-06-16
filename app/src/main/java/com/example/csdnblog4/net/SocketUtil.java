@@ -1,7 +1,5 @@
 package com.example.csdnblog4.net;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,7 +23,7 @@ public class SocketUtil {
      * @param inputStream
      * @return
      */
-    public static String readFromStream(InputStream inputStream) {
+    public static String readFromStream(InputStream inputStream) throws SocketExceptions{
         StringBuilder result = new StringBuilder("");
         BufferedInputStream bufferedInputStream=null;
         byte[] header=new byte[4];
@@ -39,6 +37,9 @@ public class SocketUtil {
 
             while(te<header.length&&te!=-1) {
                 te += bufferedInputStream.read(header, te, header.length);
+                if (te==-1){
+                    throw new SocketExceptions("serverHasClosed");
+                }
             }
             int lenght=byteArrayToInt(header);
             len=0;
@@ -50,14 +51,13 @@ public class SocketUtil {
             result.append(piece);
         } catch (IOException e) {
             e.printStackTrace();
-            return "";
+            return null;
         }
 
         return result.toString();
     }
 
-    public static synchronized void write2Stream(String data,String uuid,OutputStream outputStream)  {
-        Log.d("orangeW",data+"<<"+uuid);
+    public static  void write2Stream(String data,String uuid,OutputStream outputStream)  {
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(outputStream);
         byte[] buffData= getContentData(data, uuid);
         byte[] header= int2ByteArrays(data.getBytes().length);
