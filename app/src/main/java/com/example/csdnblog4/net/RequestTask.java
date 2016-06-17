@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -77,25 +78,6 @@ public class RequestTask implements Runnable {
             failedMessage(-1, "IOException");
             e.printStackTrace();
         }
-    }
-
-    private void failedMessage(int code, String msg) {
-        Message message = handler.obtainMessage(FAILED);
-        message.what = FAILED;
-        message.arg1 = code;
-        message.obj = msg;
-        handler.sendMessage(message);
-    }
-
-    private void successMessage(Protocol protocol) {
-        Message message = handler.obtainMessage(SUCCESS);
-        message.what = SUCCESS;
-        message.obj = protocol.getMessage();
-        handler.sendMessage(message);
-    }
-
-    public void addRequest(Protocol data) {
-        sendData.add(data);
     }
 
     public void stop() {
@@ -168,22 +150,19 @@ public class RequestTask implements Runnable {
                     if (reciverData != null) {
                         successMessage(reciverData);
                         reciveDatas.offer(reciverData);
-                        toNotifyAll(sendData);
                     }
                 }catch (SocketExceptions e){
-                    Log.d("orangeExce","server close");
                     isCancle=true;
                     heartBeatTask.setKeepAlive(false);
                     RequestTask.this.stop();
                 }
-
             }
             SocketUtil.closeStream(inputStreamReciver);
         }
     }
 
 
-    //write
+    //write 当没有发送的数据时让发送线程进行等待
     public class SendTask extends Thread {
         private boolean isCancle = false;
         private OutputStream outputStreamSend;
@@ -191,6 +170,7 @@ public class RequestTask implements Runnable {
         @Override
         public void run() {
             while (!isCancle) {
+                printMessage();
                 Protocol dataContent = sendData.poll();
                 if (dataContent == null) {
                     toWait(sendData);
@@ -228,6 +208,35 @@ public class RequestTask implements Runnable {
             o.notifyAll();
         }
     }
+    public void printMessage(){
+        Iterator<Protocol> protocolIterator=sendData.iterator();
+        Log.d("orangeSendDataSize",sendData.size()+"");
+        while (protocolIterator.hasNext()){
+            Log.d("orangeDetail",protocolIterator.next().getMessage());
+        }
+    }
+
+    private void failedMessage(int code, String msg) {
+        Message message = handler.obtainMessage(FAILED);
+        message.what = FAILED;
+        message.arg1 = code;
+        message.obj = msg;
+        handler.sendMessage(message);
+    }
+
+    private void successMessage(Protocol protocol) {
+        Message message = handler.obtainMessage(SUCCESS);
+        message.what = SUCCESS;
+        message.obj = protocol.getMessage();
+        handler.sendMessage(message);
+    }
+
+    public void addRequest(Protocol data) {
+        sendData.add(data);
+        toNotifyAll(sendData);
+        printMessage();
+    }
+
 
     public class MyHandler extends Handler {
         TCPRequestCallBack tcpRequestCallBack;
