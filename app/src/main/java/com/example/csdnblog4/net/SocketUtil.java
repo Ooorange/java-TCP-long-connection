@@ -47,6 +47,8 @@ public class SocketUtil {
             while(len<header.length) {
                 if((temp = bis.read(header, len, header.length-len))>0){
                     len+=temp;
+                }else {
+                    throw new SocketExceptions("serverClose");
                 }
             }
 
@@ -58,6 +60,8 @@ public class SocketUtil {
             while (len<length){
                 if((temp=bis.read(content,len,content.length-len))>0){
                     len+=temp;
+                }else{
+                    throw new SocketExceptions("serverClose");
                 }
             }
 
@@ -75,10 +79,14 @@ public class SocketUtil {
     }
 
     public static  void writeContent2Stream(Protocol protocol, OutputStream outputStream)  {
-        protocol.setMsgTargetUUID("4c37987f8e13461dbf0c133af338c039");//小米
+        /**---------------先写死------------------*/
+        protocol.setMsgTargetUUID("9b0a60c7df57485ba2be6b81dac00d5d");//小米9b0a60c7df57485ba2be6b81dac00d5d
         protocol.setClientVersion(ProjectApplication.versionID);
         protocol.setSelfUUid(ProjectApplication.getUUID());
+        /**--------------------------------------*/
+
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(outputStream);
+
         byte[] buffData= getContentData(protocol);
 
         byte[] header= int2ByteArrays(buffData.length);

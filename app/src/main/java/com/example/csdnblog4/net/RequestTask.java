@@ -3,7 +3,6 @@ package com.example.csdnblog4.net;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import com.example.csdnblog4.common.ProjectApplication;
 
@@ -12,7 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -209,11 +207,6 @@ public class RequestTask implements Runnable {
         }
     }
     public void printMessage(){
-        Iterator<Protocol> protocolIterator=sendData.iterator();
-        Log.d("orangeSendDataSize",sendData.size()+"");
-        while (protocolIterator.hasNext()){
-            Log.d("orangeDetail",protocolIterator.next().getMessage());
-        }
     }
 
     private void failedMessage(int code, String msg) {

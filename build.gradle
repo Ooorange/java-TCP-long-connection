@@ -13,5 +13,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+//        maven { url "http://172.16.100.157:8081/nexus/content/repositories/CommonComponentsAndroid/"}
     }
 }

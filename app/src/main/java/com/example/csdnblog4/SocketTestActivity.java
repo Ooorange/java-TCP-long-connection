@@ -133,6 +133,7 @@ public class SocketTestActivity extends BaseActivity implements
                 Protocol protocol=new Protocol();
                 protocol.setMessage(msg);
                 tcpLongConnect.addNewRequest(protocol);
+
                 chatAdapter.addMessage(new ChatContent(ChatContent.MYSELF, msg));
                 recyclerView.scrollToPosition(chatAdapter.getAdapterSize() - 1);
                 et_messageData.setText("");

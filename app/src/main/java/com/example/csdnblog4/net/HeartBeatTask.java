@@ -23,7 +23,7 @@ public class HeartBeatTask implements Runnable {
     public void run() {
         try {
             while (isKeepAlive) {
-                SocketUtil.writeContent2Stream(new Protocol("heartBeat"), outputStream);
+                SocketUtil.writeContent2Stream(new Protocol("heartBeat1"), outputStream);
                 try {
                     Thread.sleep(REPEATTIME);
                 } catch (InterruptedException e) {
