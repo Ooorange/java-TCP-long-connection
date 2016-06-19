@@ -58,7 +58,7 @@ public class SocketUtil {
             procotol.setMessage(msg);
             procotol.setMsgTargetUUID(msgTargetUUID);
             procotol.setSelfUUid(clientUUID);
-            System.out.println(procotol.toString());
+            System.out.println("recive:"+procotol.toString());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -77,7 +77,7 @@ public class SocketUtil {
      */
     public static  void write2Stream(Protocol protocol, OutputStream outputStrea) {
 
-
+    	 System.out.println("Send"+protocol.toString());
         DataOutputStream outputStream = new DataOutputStream(outputStrea);
 
         byte[] buffData;

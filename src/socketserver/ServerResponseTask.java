@@ -56,11 +56,9 @@ public class ServerResponseTask implements Runnable {
             	if(procotol==null){
             		toWaitAll(reciverData);
 				} else {	
-					System.out.println("Wri------:"+procotol.toString());
 					SocketUtil.write2Stream(procotol, outputStream);// TODO
 				}
             }
-
             SocketUtil.closeStream(outputStream);
         }
     }
@@ -73,15 +71,13 @@ public class ServerResponseTask implements Runnable {
         public void run() {
             while (!isCancle){
             	Protocol clientData=SocketUtil.readFromStream(inputStream);
-                if(clientData==null){
-                	isCancle=true;
-                	return;
+                if(clientData!=null){
+                	reciverData.offer(clientData);
+                    toNotifyAll(reciverData);
+                    if(tBack!=null&&clientData!=null){
+            			tBack.connectSuccess(clientData);
+            		}
                 }
-                reciverData.offer(clientData);
-                toNotifyAll(reciverData);
-                if(tBack!=null&&clientData!=null){
-        			tBack.connectSuccess(clientData);
-        		}
             }
             SocketUtil.closeStream(inputStream);
         }
@@ -98,7 +94,7 @@ public class ServerResponseTask implements Runnable {
     }
     
     public synchronized void addWriteTask(Protocol procotol,Socket targetClient ){
-    	reciverData.offer(procotol);
+    	reciverData.add(procotol);
     	try {
 			serverWriteTask.outputStream=new DataOutputStream(targetClient.getOutputStream());
 		} catch (IOException e) {
