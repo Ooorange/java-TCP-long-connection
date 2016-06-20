@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import bean.User;
 
@@ -22,9 +24,7 @@ public class DBConnect {
 			//创建离线消息表
 			statement.executeUpdate("create table  if not exists message(message_type int ,message varchar(200),sender_uuid varchar(32), reviver_uuid varchar(32), send_time varchar(25),insert_time varchar(25));" );//创建一个表，两列
 			//创建用户表
-			statement.executeUpdate("create table  if not exist user(user_uuid varchar(32),user_ip varchar(20));");
-			//创建用户好友表
-			statement.executeUpdate("create table if not exits user_friend(self_uuid varchar(32),friend_ip varchar(20);");
+			statement.executeUpdate("create table  if not exists user(serise_id integer  auto_increment,user_uuid varchar(32) unique not null ,user_ip varchar(20),primary key(serise_id));");
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("sqlite not found exception ");
@@ -64,26 +64,74 @@ public class DBConnect {
 		return insertResult;
 	}
 	
-	public User getFriend(String selfUUId){
+	/**
+	 * 创建用户好友表
+	 * @return
+	 */
+	public boolean createUserFriendTable(){
+		try {
+			statement.executeUpdate("create table if not exists user_friend(user_friend_seriseid integer auto_increment,self_uuid varchar(32) not null,friend_uuid varchar(32) unique not null,friend_ip varchar(20) unique,primary key(user_friend_seriseid));");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * 插入一个好友
+	 * @param friend 插入好友的信息
+	 * @param selfUUID 自己的信息
+	 * @return
+	 */
+	public boolean inserUserFriend(User friend,String selfUUID){
+		boolean insertResult=false;
+		try {
+			statement.executeUpdate("insert into user_friend(self_uuid,friend_uuid,friend_ip) values('"+selfUUID+"+','"+friend.getSelf_uuid()+"','"+friend.getFriendIP()+"');");
+		} catch (SQLException e) {
+			insertResult=false;
+			e.printStackTrace();
+		}
+		return insertResult;
+	}
+	/**
+	 * 获取好友列表
+	 * @param selfUUId
+	 * @return
+	 */
+	public List<User> getFriends(String selfUUId){
 		
-		User user=new User();
+		List<User> users=new ArrayList<User>();
 		try {
 			ResultSet resultSet=statement.executeQuery("select * from user_friend where self_uuid="+selfUUId+";");
 			while(resultSet.next()){
+				User user=new User();
 				user.setFriendIP(resultSet.getString("friend_ip"));
+				users.add(user);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return user;
+		return users;
 	}
+
 	
-	
-	
-	
-	
-	
+	/**
+	 * 插入一个新的用户
+	 * @param user
+	 * @return
+	 */
+	public boolean insertUser(User user){
+		//创建用户好友表
+		try {
+			statement.executeUpdate("insert into user (user_uuid,user_ip) values ('"+user.getSelf_uuid()+"','"+user.getFriendIP()+"');");
+			return true;
+		} catch (SQLException e) {
+			System.out.println("SqlException");
+			return false;
+		}
+	}
 	
 	
 	
