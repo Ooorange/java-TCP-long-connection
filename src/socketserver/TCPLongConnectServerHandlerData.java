@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.plaf.TextUI;
 
+import procotol.ChatMsgProtocol;
+
 /**
  * 在复杂的业务中，比如说车钥匙，会有接收消息队列以及发送的消息队列，作为两个独立的线程去操作，
  * 对于消息的分发还需根据请求时的Seq和接收到的Seq对应，保证数据正确分发(通过分发的线程，对注册监听的接口进行回调)
@@ -109,7 +111,8 @@ public class TCPLongConnectServerHandlerData implements Runnable {
     }
     
     public interface TCPResultCallBack{
-    	public void connectSuccess(Protocol reciveMsg);
+    	public void connectSuccess(ChatMsgProtocol reciveMsg);
+    	public void targetIsOnline(String targetUUId);
     }
     
 }

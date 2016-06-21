@@ -8,6 +8,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import bean.User;
+import procotol.BasicProtocol;
+import procotol.ChatMsgProtocol;
+import procotol.HeartBeatProcotol;
+import procotol.UserFriendReuqetProtocol;
 
 /**
  * server
@@ -17,14 +26,23 @@ public class SocketUtil {
     public static final int CLIENT_UUID=32;
     public static final int MSGTARGETCLIENT_UUID_LEN=32;
     public static final int CLIENT_VERSION_LEN=4;
+    
+    private static Map<String,String> msgImp=new HashMap<String,String>();
+    
+    static {
+        msgImp.put(ChatMsgProtocol.CHATMEGCOMMEND,"procotol.ChatMsgProtocol");
+        msgImp.put(HeartBeatProcotol.HEART_COMMEND,"procotol.HeartBeatProcotol");
+        msgImp.put(UserFriendReuqetProtocol.FRIENDREQUEST,"procotol.UserFriendReuqetProtocol");
+    }
+    
     /**
      * 并没有关闭输入输出流
      *
      * @param inputStream
      * @return
      */
-    public static  Protocol readFromStream(InputStream inputStream) {
-        Protocol procotol=new Protocol();
+    public static  BasicProtocol readFromStream(InputStream inputStream) {
+    	BasicProtocol basicProcotol=null;
         DataInputStream dis = null;
         int pos=CLIENT_VERSION_LEN;
 
@@ -47,25 +65,29 @@ public class SocketUtil {
                 if((temp = dis.read(contentData,readedLen, length-readedLen))>0)
                     readedLen = temp + readedLen;
             }
-            int version=bytesToInt(contentData,0);
-            String clientUUID=new String(contentData,pos,CLIENT_UUID);
-            pos+=CLIENT_UUID;
-            String msgTargetUUID=new String(contentData,pos,MSGTARGETCLIENT_UUID_LEN);
-            pos+=MSGTARGETCLIENT_UUID_LEN;
-            String msg=new String(contentData,pos,contentData.length-pos);
-            
-            procotol.setClientVersion(version);
-            procotol.setMessage(msg);
-            procotol.setMsgTargetUUID(msgTargetUUID);
-            procotol.setSelfUUid(clientUUID);
-            System.out.println("recive:"+procotol.toString());
+            basicProcotol=parseContentMsg(contentData);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-
-        return procotol;
+        return basicProcotol;
     }
+    
+    public static BasicProtocol parseContentMsg(byte[] data){
+        String commendType=BasicProtocol.paraseCommend(data);
+        String className=msgImp.get(commendType);
+        
+        BasicProtocol basicProtocol= null;
+        try {
+            basicProtocol = (BasicProtocol) Class.forName(className).newInstance();
+            basicProtocol.parseBinary(data);
+        } catch (Exception e) {
+            basicProtocol=null;
+            e.printStackTrace();
+        }
+        return basicProtocol;
+    }
+    
 
     /**
      *
@@ -75,7 +97,7 @@ public class SocketUtil {
      * @throws UnsupportedEncodingException
      * 
      */
-    public static  void write2Stream(Protocol protocol, OutputStream outputStrea) {
+    public static  void write2Stream(ChatMsgProtocol protocol, OutputStream outputStrea) {
 
     	 System.out.println("Send"+protocol.toString());
         DataOutputStream outputStream = new DataOutputStream(outputStrea);
@@ -95,7 +117,34 @@ public class SocketUtil {
 
     }
 
-
+    /**
+     *  响应客户端好友列表请求
+     * @param users
+     * @param protocol
+     * @param outputStrea
+     */
+    public static void sendFriendList(List<User> users,UserFriendReuqetProtocol protocol,DataOutputStream outputStrea){
+    	
+    	String jsonBody=JsonUtil.toJson(users);
+    	ByteArrayOutputStream baos=new ByteArrayOutputStream();
+    	baos.write(int2ByteArrays(protocol.getClientVersion()),0,CLIENT_VERSION_LEN);
+    	byte[] friendList=jsonBody.getBytes();
+    	baos.write(friendList,0,friendList.length);
+    	
+    	byte[] bufferData=baos.toByteArray();
+    	byte[] header=int2ByteArrays(bufferData.length);
+    	
+    	try {
+    		outputStrea.write(header);
+    		outputStrea.flush();
+    		outputStrea.write(bufferData);
+    		outputStrea.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	
+    }
     /**
      * 协议包体,服务端只要向目标客户端写入信息,以及对应的versionCode就行
      * 
@@ -105,7 +154,7 @@ public class SocketUtil {
      * @param protocol
      * @return
      */
-    public static byte[] getContentData(Protocol protocol){
+    public static byte[] getContentData(ChatMsgProtocol protocol){
         ByteArrayOutputStream baos=new ByteArrayOutputStream(CLIENT_UUID+MSGTARGETCLIENT_UUID_LEN+CLIENT_VERSION_LEN);
 
         baos.write(int2ByteArrays(protocol.getClientVersion()),0,CLIENT_VERSION_LEN);

@@ -21,7 +21,7 @@ public class DbMain {
 		friend1.setSelf_uuid("4d8e938015b34049a21fad31a3e29820");
 		friend1.setFriendIP("120.0.2.1");
 		db.insertUser(friend1);
-		db.inserUserFriend(friend1,user.getSelf_uuid());
+		db.inserUserFriend(friend1,user.getSelf_uuid());//preview nexus 5
 		
 		User user3=new User();
 		user3.setSelf_uuid("4c37987f8e13461dbf0c133af338c039");
