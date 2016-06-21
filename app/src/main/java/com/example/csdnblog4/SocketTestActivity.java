@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -14,7 +13,9 @@ import android.widget.RadioGroup;
 
 import com.example.csdnblog4.Adapter.ChatAdapter;
 import com.example.csdnblog4.Entity.ChatContent;
-import com.example.csdnblog4.net.Protocol;
+import com.example.csdnblog4.net.BasicProtocol;
+import com.example.csdnblog4.net.ChatMsgProcotol;
+import com.example.csdnblog4.net.ResponseProcotol;
 import com.example.csdnblog4.net.SocketClient;
 import com.example.csdnblog4.net.TCPLongConnectClient;
 import com.example.csdnblog4.net.TCPRequestCallBack;
@@ -130,7 +131,7 @@ public class SocketTestActivity extends BaseActivity implements
                 if (tcpLongConnect==null){
                     return;
                 }
-                Protocol protocol=new Protocol();
+                ChatMsgProcotol protocol=new ChatMsgProcotol();
                 protocol.setMessage(msg);
                 tcpLongConnect.addNewRequest(protocol);
 
@@ -151,13 +152,13 @@ public class SocketTestActivity extends BaseActivity implements
     }
 
     @Override
-    public void onSuccess(String msg) {
+    public void onSuccess(BasicProtocol responProcotol) {
         setTitle("连接成功");
 //        Log.d("orangeRe",msg);
-        if (TextUtils.isEmpty(msg)){
+        if (responProcotol==null){
             return;
         }
-        chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, msg));
+        chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, ((ResponseProcotol)responProcotol).getBody()));
         recyclerView.scrollToPosition(chatAdapter.getAdapterSize()-1);
     }
 

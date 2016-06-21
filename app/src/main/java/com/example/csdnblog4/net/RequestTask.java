@@ -26,7 +26,8 @@ import javax.net.SocketFactory;
  *
  */
 public class RequestTask implements Runnable {
-    private static final String ADDRESS = "172.16.101.148";
+//    private static final String ADDRESS = "172.16.101.148";
+    private static final String ADDRESS = "192.168.1.111";
     private static final int PORT = 9013;
     private static final int SUCCESS = 100;
     private static final int FAILED = -1;
@@ -39,8 +40,8 @@ public class RequestTask implements Runnable {
     private String uuid;
     private ExecutorService executorService;
     Socket socket = null;
-    protected volatile ConcurrentLinkedQueue<Protocol> sendData = new ConcurrentLinkedQueue<Protocol>();
-    protected volatile ConcurrentLinkedQueue<Protocol> reciveDatas = new ConcurrentLinkedQueue<Protocol>();
+    protected volatile ConcurrentLinkedQueue<BasicProtocol> sendData = new ConcurrentLinkedQueue<BasicProtocol>();
+    protected volatile ConcurrentLinkedQueue<BasicProtocol> reciveDatas = new ConcurrentLinkedQueue<BasicProtocol>();
 
     public RequestTask(TCPRequestCallBack tcpRequestCallBacks) {
         this.tcpRequestCallBack = tcpRequestCallBacks;
@@ -144,7 +145,7 @@ public class RequestTask implements Runnable {
                     break;
                 }
                 try {
-                    Protocol reciverData = SocketUtil.readFromStream(inputStreamReciver);
+                    ResponseProcotol reciverData = (ResponseProcotol) SocketUtil.readFromStream(inputStreamReciver);
                     if (reciverData != null) {
                         successMessage(reciverData);
                         reciveDatas.offer(reciverData);
@@ -169,7 +170,7 @@ public class RequestTask implements Runnable {
         public void run() {
             while (!isCancle) {
                 printMessage();
-                Protocol dataContent = sendData.poll();
+                BasicProtocol dataContent = sendData.poll();
                 if (dataContent == null) {
                     toWait(sendData);
                 } else {
@@ -217,14 +218,14 @@ public class RequestTask implements Runnable {
         handler.sendMessage(message);
     }
 
-    private void successMessage(Protocol protocol) {
+    private void successMessage(BasicProtocol protocol) {
         Message message = handler.obtainMessage(SUCCESS);
         message.what = SUCCESS;
-        message.obj = protocol.getMessage();
+        message.obj = protocol;
         handler.sendMessage(message);
     }
 
-    public void addRequest(Protocol data) {
+    public void addRequest(ChatMsgProcotol data) {
         sendData.add(data);
         toNotifyAll(sendData);
         printMessage();
@@ -244,7 +245,7 @@ public class RequestTask implements Runnable {
             super.handleMessage(msg);
             switch (msg.what) {
                 case SUCCESS:
-                    tcpRequestCallBack.onSuccess((String) msg.obj);
+                    tcpRequestCallBack.onSuccess((BasicProtocol) msg.obj);
                     break;
                 case FAILED:
                     tcpRequestCallBack.onFailed(msg.arg1, (String) msg.obj);

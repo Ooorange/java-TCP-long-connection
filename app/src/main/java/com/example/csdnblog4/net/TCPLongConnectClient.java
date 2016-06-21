@@ -34,7 +34,7 @@ public class TCPLongConnectClient {
         executorService.execute(requestTask);
     }
 
-    public void addNewRequest(Protocol data){
+    public void addNewRequest(ChatMsgProcotol data){
         if (requestTask!=null)
         requestTask.addRequest(data);
     }

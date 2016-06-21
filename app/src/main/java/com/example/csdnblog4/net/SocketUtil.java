@@ -1,9 +1,5 @@
 package com.example.csdnblog4.net;
 
-import android.util.Log;
-
-import com.example.csdnblog4.common.ProjectApplication;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,9 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by orange on 16/6/8.
+ * java.net.SocketException: Connection reset
+ 引起这个异常的原因有两个：
+ 一、客户端和服务器端如果一端的Socket被关闭，另一端仍发送数据，发送的第一个数据包引发该异常；
+ 二、客户端和服务器端一端退出，但退出时并未关闭该连接，另一端如果在从连接中读数据则抛出该异常。
+ 简单来说就是在连接断开后的读和写操作引起的。
+ * 注意,并没有关闭输入输出流
+ *
+ *Created by orange on 16/6/8.
  */
 public class SocketUtil {
 
@@ -21,19 +26,14 @@ public class SocketUtil {
     public static final int MSGTARGETCLIENT_UUID_LEN=32;
     public static final int CLIENT_VERSION_LEN=4;
 
+    private static Map<String,String> msgImp=new HashMap<String,String>();
+    {
+        msgImp.put(ChatMsgProcotol.CHATMEGCOMMEND,"com.example.csdnblog4.net.ChatMsgProcotol");
+        msgImp.put(HeartBeatProtocol.HEART_COMMEND,"com.example.csdnblog4.net.HeartBeatProtocol");
+    }
 
-    /**
-     * java.net.SocketException: Connection reset
-     引起这个异常的原因有两个：
-     一、客户端和服务器端如果一端的Socket被关闭，另一端仍发送数据，发送的第一个数据包引发该异常；
-     二、客户端和服务器端一端退出，但退出时并未关闭该连接，另一端如果在从连接中读数据则抛出该异常。
-     简单来说就是在连接断开后的读和写操作引起的。
-     * 注意,并没有关闭输入输出流
-     * @param inputStream
-     * @return
-     */
-    public static Protocol readFromStream(InputStream inputStream) throws SocketExceptions{
-        Protocol protocol=new Protocol();
+    public static BasicProtocol readFromStream(InputStream inputStream) throws SocketExceptions{
+        BasicProtocol protocol;
         BufferedInputStream bis;
         int pos=CLIENT_VERSION_LEN;
         byte[] header=new byte[CLIENT_VERSION_LEN];
@@ -52,7 +52,8 @@ public class SocketUtil {
                 }
             }
 
-            int length=byteArrayToInt(header);
+            int length=byteArrayToInt(header);//包体长度
+
             len=0;
             temp=0;
 
@@ -64,11 +65,12 @@ public class SocketUtil {
                     throw new SocketExceptions("serverClose");
                 }
             }
+            protocol=parseContentMsg(content);
 
-            protocol.setClientVersion(bytes2Int(content,0));
-            protocol.setMsgTargetUUID(new String(content, pos, MSGTARGETCLIENT_UUID_LEN));
-            pos+=MSGTARGETCLIENT_UUID_LEN;
-            protocol.setMessage(new String(content,pos,content.length-pos));
+//            protocol.setClientVersion(bytes2Int(content,0));
+//            protocol.setMsgTargetUUID(new String(content, pos, MSGTARGETCLIENT_UUID_LEN));
+//            pos+=MSGTARGETCLIENT_UUID_LEN;
+//            protocol.setMessage(new String(content,pos,content.length-pos));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,16 +80,29 @@ public class SocketUtil {
         return protocol;
     }
 
-    public static  void writeContent2Stream(Protocol protocol, OutputStream outputStream)  {
-        /**---------------先写死------------------*/
-        protocol.setMsgTargetUUID("9b0a60c7df57485ba2be6b81dac00d5d");//小米9b0a60c7df57485ba2be6b81dac00d5d
-        protocol.setClientVersion(ProjectApplication.versionID);
-        protocol.setSelfUUid(ProjectApplication.getUUID());
-        /**--------------------------------------*/
+
+    public static BasicProtocol parseContentMsg(byte[] data){
+        String commendType=BasicProtocol.paraseCommend(data);
+
+        String className=msgImp.get(commendType);
+        BasicProtocol basicProtocol= null;
+        try {
+            basicProtocol = (BasicProtocol) Class.forName(className).newInstance();
+            basicProtocol.parseBinary(data);
+        } catch (Exception e) {
+            basicProtocol=null;
+            e.printStackTrace();
+        }
+        return basicProtocol;
+    }
+
+
+    public static  void writeContent2Stream(BasicProtocol protocol, OutputStream outputStream)  {
+        /**-先写死----6.0  9b0a60c7df57485ba2be6b81dac00d5d--------------5.0:4d8e938015b34049a21fad31a3e29820*/
 
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(outputStream);
 
-        byte[] buffData= getContentData(protocol);
+        byte[] buffData= protocol.getContentData();
 
         byte[] header= int2ByteArrays(buffData.length);
         try {
@@ -97,11 +112,11 @@ public class SocketUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("orangeWr",protocol.toString());
     }
 
+
     //协议包体
-    public static byte[] getContentData(Protocol protocol){
+    public static byte[] getContentData(ChatMsgProcotol protocol){
         ByteArrayOutputStream baos=new ByteArrayOutputStream(CLIENT_UUID+MSGTARGETCLIENT_UUID_LEN+CLIENT_VERSION_LEN);
 
         baos.write(int2ByteArrays(protocol.getClientVersion()), 0, CLIENT_VERSION_LEN);

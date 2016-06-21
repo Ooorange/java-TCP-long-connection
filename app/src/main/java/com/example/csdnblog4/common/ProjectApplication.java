@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
@@ -22,7 +23,7 @@ public class ProjectApplication extends Application {
         AppCrashHandler appCrashHandler=new AppCrashHandler();
         Thread.setDefaultUncaughtExceptionHandler(appCrashHandler);
         uuid=MobileUtils.getUUID(this);
-
+        Log.d("orangeUUId",uuid);
         PackageInfo info = null;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);

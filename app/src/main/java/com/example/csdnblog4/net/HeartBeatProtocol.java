@@ -5,15 +5,15 @@ package com.example.csdnblog4.net;
  */
 public class HeartBeatProtocol extends BasicProtocol {
 
-    private static String COMMEND="0000";
+    public static String HEART_COMMEND="0000";
     @Override
     public String getCommend() {
-        return COMMEND;
+        return HEART_COMMEND;
     }
 
     @Override
     public int parseBinary(byte[] data) throws ProtocolException {
-        return COMMEND.length();
+        return HEART_COMMEND.length();
     }
 
 }
