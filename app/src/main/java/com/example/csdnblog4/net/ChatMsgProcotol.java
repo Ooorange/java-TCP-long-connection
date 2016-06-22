@@ -4,6 +4,7 @@ import com.example.csdnblog4.common.ProjectApplication;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by orange on 16/6/13.
@@ -82,5 +83,22 @@ public class ChatMsgProcotol extends BasicProtocol implements Serializable{
         byte[] message=getMessage().getBytes();
         baos.write(message,0,message.length);
         return baos.toByteArray();
+    }
+
+    @Override
+    public int parseBinary(byte[] data) throws ProtocolException {
+        int pos=super.parseBinary(data);
+        selfUUid=new String(data,pos,SLEFUUID_LEN);
+        pos+=SLEFUUID_LEN;
+        msgTargetUUID=new String(data,pos,MSGTARGETUUID_LEN);
+        pos+=MSGTARGETUUID_LEN;
+        clientVersion=SocketUtil.bytes2Int(data, pos);
+        pos+=CLIENTVERION_LEN;
+        try {
+            message=new String(data,pos,data.length-pos,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return pos;
     }
 }

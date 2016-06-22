@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class ResponseProcotol extends BasicProtocol {
 
-    public static final String RESPONSECOMMEND="0000";
+    public static final String RESPONSECOMMEND="0002";
     private String body;
 
 

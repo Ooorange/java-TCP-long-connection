@@ -15,7 +15,6 @@ import com.example.csdnblog4.Adapter.ChatAdapter;
 import com.example.csdnblog4.Entity.ChatContent;
 import com.example.csdnblog4.net.BasicProtocol;
 import com.example.csdnblog4.net.ChatMsgProcotol;
-import com.example.csdnblog4.net.ResponseProcotol;
 import com.example.csdnblog4.net.SocketClient;
 import com.example.csdnblog4.net.TCPLongConnectClient;
 import com.example.csdnblog4.net.TCPRequestCallBack;
@@ -158,7 +157,7 @@ public class SocketTestActivity extends BaseActivity implements
         if (responProcotol==null){
             return;
         }
-        chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, ((ResponseProcotol)responProcotol).getBody()));
+        chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, ((ChatMsgProcotol)responProcotol).getMessage()));
         recyclerView.scrollToPosition(chatAdapter.getAdapterSize()-1);
     }
 

@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.example.csdnblog4.common.ProjectApplication;
+import com.example.csdnblog4.net.protocol.RegisterProcotol;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +28,7 @@ import javax.net.SocketFactory;
  */
 public class RequestTask implements Runnable {
 //    private static final String ADDRESS = "172.16.101.148";
-    private static final String ADDRESS = "192.168.1.111";
+    private static final String ADDRESS = "192.168.1.102";
     private static final int PORT = 9013;
     private static final int SUCCESS = 100;
     private static final int FAILED = -1;
@@ -52,13 +53,15 @@ public class RequestTask implements Runnable {
     public void run() {
         uuid = ProjectApplication.getUUID();
         try {
-            failedMessage(0,"服务器连接中");
+            failedMessage(0, "服务器连接中");
             try {
                 socket = SocketFactory.getDefault().createSocket(ADDRESS, PORT);
             }catch (ConnectException e){
-                failedMessage(-1,"服务区器连接异常,请检查网络");
+                failedMessage(-1, "服务区器连接异常,请检查网络");
                 return;
             }
+            sendData.add(new RegisterProcotol());
+
             sendTask=new SendTask();
 
             sendTask.outputStreamSend = socket.getOutputStream();
@@ -145,9 +148,13 @@ public class RequestTask implements Runnable {
                     break;
                 }
                 try {
-                    ResponseProcotol reciverData = (ResponseProcotol) SocketUtil.readFromStream(inputStreamReciver);
+                    BasicProtocol reciverData = SocketUtil.readFromStream(inputStreamReciver);
                     if (reciverData != null) {
-                        successMessage(reciverData);
+                        if (reciverData instanceof ChatMsgProcotol){
+                            successMessage(reciverData);
+                        }else if (reciverData instanceof RegisterProcotol){
+                            successMessage(null);
+                        }
                         reciveDatas.offer(reciverData);
                     }
                 }catch (SocketExceptions e){
