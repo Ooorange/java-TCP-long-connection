@@ -1,8 +1,10 @@
 package com.example.csdnblog4.net;
 
-import android.util.Log;
-
+import com.example.csdnblog4.net.protocol.BasicProtocol;
+import com.example.csdnblog4.net.protocol.ChatMsgProcotol;
+import com.example.csdnblog4.net.protocol.HeartBeatProtocol;
 import com.example.csdnblog4.net.protocol.RegisterProcotol;
+import com.example.csdnblog4.net.protocol.ResponseProcotol;
 import com.example.csdnblog4.net.protocol.UserFriendReuqestProcotol;
 
 import java.io.BufferedInputStream;
@@ -33,11 +35,11 @@ public class SocketUtil {
 
     private static Map<String,String> msgImp=new HashMap<String,String>();
     static {
-        msgImp.put(HeartBeatProtocol.HEART_COMMEND,"com.example.csdnblog4.net.HeartBeatProtocol");//0000
-        msgImp.put(ChatMsgProcotol.CHATMEGCOMMEND,"com.example.csdnblog4.net.ChatMsgProcotol");//0001
-        msgImp.put(ResponseProcotol.RESPONSECOMMEND,"com.example.csdnblog4.net.ResponseProcotol");//0002
-        msgImp.put(UserFriendReuqestProcotol.USERFRIENDREQUESTCOMMEND,"com.example.csdnblog4.net.UserFriendReuqestProcotol");//0003
-        msgImp.put(RegisterProcotol.REGISTERCOMMEND,"com.example.csdnblog4.net.RegisterProcotol");//0004
+        msgImp.put(HeartBeatProtocol.HEART_COMMEND,"com.example.csdnblog4.net.protocol.HeartBeatProtocol");//0000
+        msgImp.put(ChatMsgProcotol.CHATMEGCOMMEND,"com.example.csdnblog4.net.protocol.ChatMsgProcotol");//0001
+        msgImp.put(ResponseProcotol.RESPONSECOMMEND,"com.example.csdnblog4.net.protocol.ResponseProcotol");//0002
+        msgImp.put(UserFriendReuqestProcotol.USERFRIENDREQUESTCOMMEND,"com.example.csdnblog4.net.protocol.UserFriendReuqestProcotol");//0003
+        msgImp.put(RegisterProcotol.REGISTERCOMMEND,"com.example.csdnblog4.net.protocol.RegisterProcotol");//0004
     }
 
     public static BasicProtocol readFromStream(InputStream inputStream) throws SocketExceptions{
@@ -86,7 +88,6 @@ public class SocketUtil {
         String commendType=BasicProtocol.paraseCommend(data);
 
         String className=msgImp.get(commendType);
-        Log.d("orangeParas",commendType+","+className);
         BasicProtocol basicProtocol= null;
         try {
             basicProtocol = (BasicProtocol) Class.forName(className).newInstance();

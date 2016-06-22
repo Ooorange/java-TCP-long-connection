@@ -1,4 +1,6 @@
-package com.example.csdnblog4.net;
+package com.example.csdnblog4.net.protocol;
+
+import com.example.csdnblog4.net.ProtocolException;
 
 import java.io.UnsupportedEncodingException;
 

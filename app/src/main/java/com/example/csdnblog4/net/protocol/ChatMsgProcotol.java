@@ -1,6 +1,9 @@
-package com.example.csdnblog4.net;
+package com.example.csdnblog4.net.protocol;
 
 import com.example.csdnblog4.common.ProjectApplication;
+import com.example.csdnblog4.net.ProtocolException;
+import com.example.csdnblog4.net.SocketUtil;
+import com.example.csdnblog4.net.protocol.BasicProtocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;

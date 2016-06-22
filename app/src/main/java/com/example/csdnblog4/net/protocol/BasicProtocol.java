@@ -1,4 +1,6 @@
-package com.example.csdnblog4.net;
+package com.example.csdnblog4.net.protocol;
+
+import com.example.csdnblog4.net.ProtocolException;
 
 import java.io.ByteArrayOutputStream;
 
@@ -25,7 +27,7 @@ public abstract class BasicProtocol {
         return baos.toByteArray();
     }
 
-    public int parseBinary(byte[] data) throws ProtocolException{
+    public int parseBinary(byte[] data) throws ProtocolException {
         String version=new String(data,0,VERSION_LEN);
         VERSION=version;
         if (!version.equals("00")){

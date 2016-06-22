@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -13,12 +14,13 @@ import android.widget.RadioGroup;
 
 import com.example.csdnblog4.Adapter.ChatAdapter;
 import com.example.csdnblog4.Entity.ChatContent;
-import com.example.csdnblog4.net.BasicProtocol;
-import com.example.csdnblog4.net.ChatMsgProcotol;
+import com.example.csdnblog4.net.protocol.BasicProtocol;
+import com.example.csdnblog4.net.protocol.ChatMsgProcotol;
 import com.example.csdnblog4.net.SocketClient;
 import com.example.csdnblog4.net.TCPLongConnectClient;
 import com.example.csdnblog4.net.TCPRequestCallBack;
 import com.example.csdnblog4.net.UDPDataInteractor;
+import com.example.csdnblog4.net.protocol.UserFriendReuqestProcotol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,12 +155,16 @@ public class SocketTestActivity extends BaseActivity implements
     @Override
     public void onSuccess(BasicProtocol responProcotol) {
         setTitle("连接成功");
-//        Log.d("orangeRe",msg);
         if (responProcotol==null){
             return;
         }
-        chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, ((ChatMsgProcotol)responProcotol).getMessage()));
-        recyclerView.scrollToPosition(chatAdapter.getAdapterSize()-1);
+        if (responProcotol instanceof ChatMsgProcotol) {
+            chatAdapter.addMessage(new ChatContent(ChatContent.GUEST, ((ChatMsgProcotol) responProcotol).getMessage()));
+            recyclerView.scrollToPosition(chatAdapter.getAdapterSize() - 1);
+        }else if (responProcotol instanceof UserFriendReuqestProcotol){
+            Log.d("orangeUser",((UserFriendReuqestProcotol)responProcotol).getUsersJson());
+        }
+
     }
 
     @Override

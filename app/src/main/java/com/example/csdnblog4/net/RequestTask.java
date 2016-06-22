@@ -5,7 +5,10 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.example.csdnblog4.common.ProjectApplication;
+import com.example.csdnblog4.net.protocol.BasicProtocol;
+import com.example.csdnblog4.net.protocol.ChatMsgProcotol;
 import com.example.csdnblog4.net.protocol.RegisterProcotol;
+import com.example.csdnblog4.net.protocol.UserFriendReuqestProcotol;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +64,7 @@ public class RequestTask implements Runnable {
                 return;
             }
             sendData.add(new RegisterProcotol());
+            sendData.add(new UserFriendReuqestProcotol());
 
             sendTask=new SendTask();
 
@@ -154,6 +158,8 @@ public class RequestTask implements Runnable {
                             successMessage(reciverData);
                         }else if (reciverData instanceof RegisterProcotol){
                             successMessage(null);
+                        }if (reciverData instanceof UserFriendReuqestProcotol){
+                            successMessage(reciverData);
                         }
                         reciveDatas.offer(reciverData);
                     }

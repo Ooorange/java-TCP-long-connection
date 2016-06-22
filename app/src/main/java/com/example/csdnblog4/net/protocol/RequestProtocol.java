@@ -1,9 +1,11 @@
-package com.example.csdnblog4.net;
+package com.example.csdnblog4.net.protocol;
+
+import com.example.csdnblog4.net.protocol.BasicProtocol;
 
 /**
  * Created by orange on 16/6/17.
  */
-public class RequestProtocol extends BasicProtocol{
+public class RequestProtocol extends BasicProtocol {
     public static String HEART_COMMEND="0002";
 
     @Override
