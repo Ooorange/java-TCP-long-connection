@@ -1,7 +1,7 @@
 package procotol;
 
 public class UserFriendReuqetProtocol extends BasicProtocol {
-	 public static String FRIENDREQUEST="0002";
+	 public static String FRIENDREQUEST="0003";
 	  
 	public String requestClientUUID;
     private int clientVersion;

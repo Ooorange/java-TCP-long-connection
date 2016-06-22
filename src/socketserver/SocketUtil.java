@@ -16,10 +16,10 @@ import bean.User;
 import procotol.BasicProtocol;
 import procotol.ChatMsgProtocol;
 import procotol.HeartBeatProcotol;
+import procotol.RegisterProtocol;
 import procotol.UserFriendReuqetProtocol;
 
 /**
- * server
  * Created by orange on 16/6/8.
  */
 public class SocketUtil {
@@ -33,6 +33,7 @@ public class SocketUtil {
         msgImp.put(ChatMsgProtocol.CHATMEGCOMMEND,"procotol.ChatMsgProtocol");
         msgImp.put(HeartBeatProcotol.HEART_COMMEND,"procotol.HeartBeatProcotol");
         msgImp.put(UserFriendReuqetProtocol.FRIENDREQUEST,"procotol.UserFriendReuqetProtocol");
+        msgImp.put(RegisterProtocol.REGISTERCOMMEND, "procotol.RegisterProtocol");
     }
     
     /**
@@ -97,13 +98,13 @@ public class SocketUtil {
      * @throws UnsupportedEncodingException
      * 
      */
-    public static  void write2Stream(ChatMsgProtocol protocol, OutputStream outputStrea) {
+    public static  void write2Stream(BasicProtocol protocol, OutputStream outputStrea) {
 
     	 System.out.println("Send"+protocol.toString());
         DataOutputStream outputStream = new DataOutputStream(outputStrea);
 
         byte[] buffData;
-        buffData = getContentData(protocol);
+        buffData = protocol.getContentData();
         // 28length
         byte[] header = int2ByteArrays(buffData.length);// headerLen:4
         try {

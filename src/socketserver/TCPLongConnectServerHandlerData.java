@@ -111,7 +111,7 @@ public class TCPLongConnectServerHandlerData implements Runnable {
     }
     
     public interface TCPResultCallBack{
-    	public void connectSuccess(ChatMsgProtocol reciveMsg);
+    	public void targetIsOffline(ChatMsgProtocol reciveMsg);
     	public void targetIsOnline(String targetUUId);
     }
     

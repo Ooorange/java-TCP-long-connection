@@ -14,6 +14,7 @@ import chatDBInit.DBConnect;
 import procotol.BasicProtocol;
 import procotol.ChatMsgProtocol;
 import procotol.HeartBeatProcotol;
+import procotol.RegisterProtocol;
 import procotol.UserFriendReuqetProtocol;
 import socketserver.TCPLongConnectServerHandlerData.TCPResultCallBack;
 
@@ -101,9 +102,9 @@ public class ServerResponseTask implements Runnable {
                 		if (targetClient!=null) {// 对方用户在线
                     		reciverData.offer(clientData);
                     		tBack.targetIsOnline(((ChatMsgProtocol)clientData).getMsgTargetUUID());
-    					} else {				//对方用户不在线
+    					} else {//对方用户不在线
     						if(tBack!=null){
-    	            			tBack.connectSuccess((ChatMsgProtocol)clientData);
+    	            			tBack.targetIsOffline((ChatMsgProtocol)clientData);
     	            		}
     					}
                 		toNotifyAll(reciverData);
@@ -112,6 +113,9 @@ public class ServerResponseTask implements Runnable {
                 		onLineClient.put(((UserFriendReuqetProtocol)clientData).getRequestClientUUID(), socket);
                 		targetClient= getConnectClient(((UserFriendReuqetProtocol)clientData).getRequestClientUUID());
                 		toNotifyAll(reciverData);
+					}else if(clientData instanceof RegisterProtocol){
+						System.out.println("用户注册请求");
+						onLineClient.put(((RegisterProtocol)clientData).getSelfUUID(), socket);
 					}else if(clientData instanceof HeartBeatProcotol){
 						System.out.println("用户心跳");
 					}

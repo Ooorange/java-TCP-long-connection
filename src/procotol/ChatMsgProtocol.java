@@ -1,5 +1,6 @@
 package procotol;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 import socketserver.ProtocolException;
@@ -64,7 +65,15 @@ public class ChatMsgProtocol extends BasicProtocol {
 	
 	@Override
 	public byte[] getContentData() {
-		return super.getContentData();
+		byte[] pre= super.getContentData();
+		ByteArrayOutputStream baos=new ByteArrayOutputStream();
+		baos.write(pre,0,pre.length);
+		baos.write(selfUUid.getBytes(),0,SLEFUUID_LEN);
+		baos.write(msgTargetUUID.getBytes(),0,MSGTARGETUUID_LEN);
+		baos.write(SocketUtil.int2ByteArrays(clientVersion),0,CLIENTVERION_LEN);
+		byte[] msg=message.getBytes();
+		baos.write(msg,0,msg.length);
+		return baos.toByteArray();
 	}
 	
 	@Override
