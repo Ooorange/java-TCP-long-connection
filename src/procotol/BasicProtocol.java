@@ -31,4 +31,8 @@ public abstract class BasicProtocol {
         }
         return VERSION_LEN+COMMEND_LEN;
     }
+    @Override
+    public String toString() {
+    	return "versionID"+VERSION;
+    }
 }

@@ -4,7 +4,7 @@ public class User {
 
 	private String friendIP;
 	private String self_uuid;
-	
+	private String friendUUID;
 
 	public String getSelf_uuid() {
 		return self_uuid;
@@ -20,6 +20,14 @@ public class User {
 
 	public void setFriendIP(String friendIP) {
 		this.friendIP = friendIP;
+	}
+
+	public String getFriendUUID() {
+		return friendUUID;
+	}
+
+	public void setFriendUUID(String friendUUID) {
+		this.friendUUID = friendUUID;
 	}
 	
 }

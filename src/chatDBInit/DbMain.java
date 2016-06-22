@@ -1,7 +1,10 @@
 package chatDBInit;
 
 
+import java.util.List;
+
 import bean.User;
+import socketserver.JsonUtil;
 
 public class DbMain {
 
@@ -9,6 +12,12 @@ public class DbMain {
 		DBConnect db=DBConnect.instance;
 		
 		
+//		createUser(db);
+		
+		queryFriends(db,"9b0a60c7df57485ba2be6b81dac00d5d");
+	}
+
+	private static void createUser(DBConnect db) {
 		db.createUserFriendTable();
 		
 		User user=new User();
@@ -34,5 +43,13 @@ public class DbMain {
 		user4.setFriendIP("241.31.12.53");
 		db.insertUser(user4);
 		db.inserUserFriend(user4,user.getSelf_uuid());
+	}
+	
+	public static void queryFriends(DBConnect db,String selfUUID){
+		List<User> users=db.getFriends(selfUUID);
+		for(int i=0,size=users.size();i<size;i++){
+			System.out.println(users.get(i).getFriendUUID());
+		}
+		System.out.println("json: "+JsonUtil.toJson(users));
 	}
 }

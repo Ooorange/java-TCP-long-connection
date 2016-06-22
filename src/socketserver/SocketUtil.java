@@ -98,13 +98,10 @@ public class SocketUtil {
      * @throws UnsupportedEncodingException
      * 
      */
-    public static  void write2Stream(BasicProtocol protocol, OutputStream outputStrea) {
-
-    	 System.out.println("Send"+protocol.toString());
-        DataOutputStream outputStream = new DataOutputStream(outputStrea);
-
-        byte[] buffData;
-        buffData = protocol.getContentData();
+    public static  void write2Stream(BasicProtocol protocol, DataOutputStream outputStream) {
+    	
+    	System.out.println(protocol.toString());
+        byte[] buffData = protocol.getContentData();
         // 28length
         byte[] header = int2ByteArrays(buffData.length);// headerLen:4
         try {
@@ -118,34 +115,7 @@ public class SocketUtil {
 
     }
 
-    /**
-     *  响应客户端好友列表请求
-     * @param users
-     * @param protocol
-     * @param outputStrea
-     */
-    public static void sendFriendList(List<User> users,UserFriendReuqetProtocol protocol,DataOutputStream outputStrea){
-    	
-    	String jsonBody=JsonUtil.toJson(users);
-    	ByteArrayOutputStream baos=new ByteArrayOutputStream();
-    	baos.write(int2ByteArrays(protocol.getClientVersion()),0,CLIENT_VERSION_LEN);
-    	byte[] friendList=jsonBody.getBytes();
-    	baos.write(friendList,0,friendList.length);
-    	
-    	byte[] bufferData=baos.toByteArray();
-    	byte[] header=int2ByteArrays(bufferData.length);
-    	
-    	try {
-    		outputStrea.write(header);
-    		outputStrea.flush();
-    		outputStrea.write(bufferData);
-    		outputStrea.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    	
-    	
-    }
+
     /**
      * 协议包体,服务端只要向目标客户端写入信息,以及对应的versionCode就行
      * 

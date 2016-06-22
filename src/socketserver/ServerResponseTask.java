@@ -74,7 +74,11 @@ public class ServerResponseTask implements Runnable {
 						}else{
 							if(procotol instanceof UserFriendReuqetProtocol){
 								List<User> users=db.getFriends(((UserFriendReuqetProtocol) procotol).getRequestClientUUID());
-								SocketUtil.sendFriendList(users, (UserFriendReuqetProtocol) procotol, outputStream);
+								if(users!=null){
+									((UserFriendReuqetProtocol)procotol).setUsersJson(JsonUtil.toJson(users));
+									System.out.println("snedJson:"+((UserFriendReuqetProtocol)procotol).getUsersJson());
+									SocketUtil.write2Stream((UserFriendReuqetProtocol)procotol, outputStream);
+								}
 							}
 						}
 					}
@@ -112,6 +116,7 @@ public class ServerResponseTask implements Runnable {
                 		System.out.println("用户好友列表请求");
                 		onLineClient.put(((UserFriendReuqetProtocol)clientData).getRequestClientUUID(), socket);
                 		targetClient= getConnectClient(((UserFriendReuqetProtocol)clientData).getRequestClientUUID());
+                		reciverData.offer(clientData);
                 		toNotifyAll(reciverData);
 					}else if(clientData instanceof RegisterProtocol){
 						System.out.println("用户注册请求");
@@ -123,8 +128,6 @@ public class ServerResponseTask implements Runnable {
                 	try {
                 		if(targetClient!=null){
                 			serverWriteTask.outputStream=new DataOutputStream(targetClient.getOutputStream());
-                		}else{
-                			serverWriteTask.outputStream=null;
                 		}
 					} catch (IOException e) {
 						e.printStackTrace();

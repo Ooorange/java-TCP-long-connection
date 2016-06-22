@@ -87,7 +87,7 @@ public class DBConnect {
 	public boolean inserUserFriend(User friend,String selfUUID){
 		boolean insertResult=false;
 		try {
-			statement.executeUpdate("insert into user_friend(self_uuid,friend_uuid,friend_ip) values('"+selfUUID+"+','"+friend.getSelf_uuid()+"','"+friend.getFriendIP()+"');");
+			statement.executeUpdate("insert into user_friend(self_uuid,friend_uuid,friend_ip) values('"+selfUUID+"','"+friend.getSelf_uuid()+"','"+friend.getFriendIP()+"');");
 		} catch (SQLException e) {
 			insertResult=false;
 			e.printStackTrace();
@@ -100,13 +100,14 @@ public class DBConnect {
 	 * @return
 	 */
 	public List<User> getFriends(String selfUUId){
-		
 		List<User> users=new ArrayList<User>();
 		try {
-			ResultSet resultSet=statement.executeQuery("select * from user_friend where self_uuid="+selfUUId+";");
+			ResultSet resultSet=statement.executeQuery("select * from user_friend where self_uuid= '"+selfUUId+"';");
+			
 			while(resultSet.next()){
 				User user=new User();
 				user.setFriendIP(resultSet.getString("friend_ip"));
+				user.setFriendUUID(resultSet.getString("friend_uuid"));
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -128,7 +129,8 @@ public class DBConnect {
 			statement.executeUpdate("insert into user (user_uuid,user_ip) values ('"+user.getSelf_uuid()+"','"+user.getFriendIP()+"');");
 			return true;
 		} catch (SQLException e) {
-			System.out.println("SqlException");
+			e.printStackTrace();
+//			System.out.println("SqlException");
 			return false;
 		}
 	}
