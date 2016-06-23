@@ -73,6 +73,7 @@ public class ServerResponseTask implements Runnable {
 							SocketUtil.write2Stream((ChatMsgProtocol) procotol, outputStream);
 						}else{
 							if(procotol instanceof UserFriendReuqetProtocol){
+								System.out.println("selfUUID:"+((UserFriendReuqetProtocol) procotol).getRequestClientUUID());
 								List<User> users=db.getFriends(((UserFriendReuqetProtocol) procotol).getRequestClientUUID());
 								if(users!=null){
 									((UserFriendReuqetProtocol)procotol).setUsersJson(JsonUtil.toJson(users));

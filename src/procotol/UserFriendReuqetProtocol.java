@@ -42,11 +42,10 @@ public class UserFriendReuqetProtocol extends BasicProtocol {
 	public int parseBinary(byte[] data) throws ProtocolException {
 		int pos=super.parseBinary(data);
 		try {
-			requestClientUUID=new String(data, pos, data.length-pos,"utf-8");
+			requestClientUUID=new String(data, pos, ChatMsgProtocol.SLEFUUID_LEN,"utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		pos+=ChatMsgProtocol.SLEFUUID_LEN;
 		return pos;
 	}
 	@Override
@@ -61,6 +60,6 @@ public class UserFriendReuqetProtocol extends BasicProtocol {
 	
 	@Override
 	public String toString() {
-		return "userJson:"+usersJson;
+		return "UserFriendReuqetProtocol:"+usersJson;
 	}
 }

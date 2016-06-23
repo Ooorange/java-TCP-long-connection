@@ -87,7 +87,7 @@ public class DBConnect {
 	public boolean inserUserFriend(User friend,String selfUUID){
 		boolean insertResult=false;
 		try {
-			statement.executeUpdate("insert into user_friend(self_uuid,friend_uuid,friend_ip) values('"+selfUUID+"','"+friend.getSelf_uuid()+"','"+friend.getFriendIP()+"');");
+			statement.executeUpdate("insert into user_friend(self_uuid,friend_uuid,friend_ip) values('"+selfUUID+"','"+friend.getSelfUUID()+"','"+friend.getFriendIP()+"');");
 		} catch (SQLException e) {
 			insertResult=false;
 			e.printStackTrace();
@@ -106,6 +106,7 @@ public class DBConnect {
 			
 			while(resultSet.next()){
 				User user=new User();
+				user.setSelfUUID(selfUUId);
 				user.setFriendIP(resultSet.getString("friend_ip"));
 				user.setFriendUUID(resultSet.getString("friend_uuid"));
 				users.add(user);
@@ -126,7 +127,7 @@ public class DBConnect {
 	public boolean insertUser(User user){
 		//创建用户好友表
 		try {
-			statement.executeUpdate("insert into user (user_uuid,user_ip) values ('"+user.getSelf_uuid()+"','"+user.getFriendIP()+"');");
+			statement.executeUpdate("insert into user (user_uuid,user_ip) values ('"+user.getSelfUUID()+"','"+user.getFriendIP()+"');");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
