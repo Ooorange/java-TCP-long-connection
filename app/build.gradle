@@ -32,6 +32,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets{
+        main{
+            java.srcDirs=['src/main/java','src/main/dbAutoCreateCode']
+        }
+    }
 }
 
 
@@ -46,13 +52,13 @@ packer {
 
 
 dependencies {
+    compile fileTree(include:'*.jar',dir:'libs' )
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     compile 'com.android.support:design:23.3.0'
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'org.greenrobot:greendao:2.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
-//    compile 'com.cheyaoshi:hybrid:1.0'
-    compile fileTree(include:'*.jar',dir:'libs' )
 }

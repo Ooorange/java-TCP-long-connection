@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.csdnblog4"
+    package="com.orange.blog"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -11,12 +11,12 @@
         android:targetSdkVersion="19" />
 
     <application
-        android:name=".common.ProjectApplication"
+        android:name="com.orange.blog.common.ProjectApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.orange.blog.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,17 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VideoPlayActivity"></activity>
-        <activity android:name=".LeafLoadingActivity" />
-        <activity android:name=".MemoryLeakActivity" />
-        <activity android:name=".SortActivity"/>
-        <activity android:name=".AnimateActivity"/>
-        <activity android:name=".SmileActivity"/>
-        <activity android:name=".ValueAnimatorActivityTranslate"/>
-        <activity android:name=".FeatureGuidActivity"/>
-        <activity android:name=".SocketTestActivity"/>
-        <activity android:name=".ShimmerActivity"/>
-        <activity android:name=".MuiltyThreadAcitivity"/>
+        <activity android:name="com.orange.blog.VideoPlayActivity"></activity>
+        <activity android:name="com.orange.blog.LeafLoadingActivity" />
+        <activity android:name="com.orange.blog.MemoryLeakActivity" />
+        <activity android:name="com.orange.blog.SortActivity"/>
+        <activity android:name="com.orange.blog.AnimateActivity"/>
+        <activity android:name="com.orange.blog.SmileActivity"/>
+        <activity android:name="com.orange.blog.ValueAnimatorActivityTranslate"/>
+        <activity android:name="com.orange.blog.FeatureGuidActivity"/>
+        <activity android:name="com.orange.blog.SocketTestActivity"/>
+        <activity android:name="com.orange.blog.ShimmerActivity"/>
+        <activity android:name="com.orange.blog.MuiltyThreadAcitivity"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="100004" />
