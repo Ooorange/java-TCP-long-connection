@@ -22,12 +22,6 @@ public class UserFriendReuqetProtocol extends BasicProtocol {
 	public void setRequestClientUUID(String requestClientUUID) {
 		this.requestClientUUID = requestClientUUID;
 	}
-//	public int getClientVersion() {
-//		return clientVersion;
-//	}
-//	public void setClientVersion(int clientVersion) {
-//		this.clientVersion = clientVersion;
-//	}
 	@Override
 	public String getCommend() {
 		return FRIENDREQUEST;

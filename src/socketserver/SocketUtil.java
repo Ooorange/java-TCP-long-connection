@@ -100,7 +100,6 @@ public class SocketUtil {
      */
     public static  void write2Stream(BasicProtocol protocol, DataOutputStream outputStream) {
     	
-    	System.out.println(protocol.toString());
         byte[] buffData = protocol.getContentData();
         // 28length
         byte[] header = int2ByteArrays(buffData.length);// headerLen:4

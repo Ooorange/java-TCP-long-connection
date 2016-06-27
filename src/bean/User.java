@@ -5,6 +5,16 @@ public class User {
 	private String friendIP;
 	private String selfUUID;
 	private String friendUUID;
+	private String friendNicName;
+	
+	
+	public String getFriendNickName() {
+		return friendNicName;
+	}
+
+	public void setFriendNickName(String friend_nick_name) {
+		this.friendNicName = friend_nick_name;
+	}
 
 	public String getSelfUUID() {
 		return selfUUID;

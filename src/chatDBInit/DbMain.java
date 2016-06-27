@@ -11,22 +11,20 @@ public class DbMain {
 	public static void main(String[] args) {
 		DBConnect db=DBConnect.instance;
 		
-		
+		db.createUserFriendTable();
 //		createUser(db);
 		
 //		queryFriends(db,"9b0a60c7df57485ba2be6b81dac00d5d");
 		User user1=new User();
 		user1.setFriendIP("120.0.0.1");
-		user1.setFriendUUID("4d8e938015b34049a21fad31a3e29820");
 		user1.setSelfUUID("4c37987f8e13461dbf0c133af338c039");
 		
 		User user2=new User();
 		user2.setFriendIP("128.6.110.1");
-		user2.setFriendUUID("04fb00752bc94d84b718d9a41e024c7a");
 		user2.setSelfUUID("4c37987f8e13461dbf0c133af338c039");
 		
-		insertFriends(user1, db, "4c37987f8e13461dbf0c133af338c039");
-		insertFriends(user2, db, "4c37987f8e13461dbf0c133af338c039");
+//		insertFriends(user1, db, "4c37987f8e13461dbf0c133af338c039");
+//		insertFriends(user2, db, "4c37987f8e13461dbf0c133af338c039");
 	}
 	
 	public List<User> createUserMock(int leng){

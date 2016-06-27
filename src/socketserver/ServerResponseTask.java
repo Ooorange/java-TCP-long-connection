@@ -29,10 +29,12 @@ public class ServerResponseTask implements Runnable {
     private volatile ConcurrentLinkedQueue<BasicProtocol> reciverData= new ConcurrentLinkedQueue<BasicProtocol>();
     private static ConcurrentHashMap<String, Socket> onLineClient=new ConcurrentHashMap<String, Socket>();
     DBConnect db;
-    public ServerResponseTask(Socket socket,TCPResultCallBack tBack,DBConnect db){
+    String userIP;
+    public ServerResponseTask(Socket socket,TCPResultCallBack tBack,DBConnect db,String userIP){
         this.socket=socket;
         this.tBack=tBack;
         this.db=db;
+        this.userIP=userIP;
     }
 
 
@@ -73,11 +75,11 @@ public class ServerResponseTask implements Runnable {
 							SocketUtil.write2Stream((ChatMsgProtocol) procotol, outputStream);
 						}else{
 							if(procotol instanceof UserFriendReuqetProtocol){
-								System.out.println("selfUUID:"+((UserFriendReuqetProtocol) procotol).getRequestClientUUID());
 								List<User> users=db.getFriends(((UserFriendReuqetProtocol) procotol).getRequestClientUUID());
 								if(users!=null){
-									((UserFriendReuqetProtocol)procotol).setUsersJson(JsonUtil.toJson(users));
-									System.out.println("snedJson:"+((UserFriendReuqetProtocol)procotol).getUsersJson());
+									String jsoss=JsonUtil.toJson(users);
+									System.out.println("查询:"+jsoss);
+									((UserFriendReuqetProtocol)procotol).setUsersJson(jsoss);
 									SocketUtil.write2Stream((UserFriendReuqetProtocol)procotol, outputStream);
 								}
 							}
@@ -120,8 +122,15 @@ public class ServerResponseTask implements Runnable {
                 		reciverData.offer(clientData);
                 		toNotifyAll(reciverData);
 					}else if(clientData instanceof RegisterProtocol){
+						
 						System.out.println("用户注册请求");
-						onLineClient.put(((RegisterProtocol)clientData).getSelfUUID(), socket);
+						String clientUUID=((RegisterProtocol)clientData).getSelfUUID();
+						onLineClient.put(clientUUID, socket);
+						db.crateateUserTable(clientUUID);
+						User user=new User();
+						user.setFriendIP(userIP);
+						user.setSelfUUID(clientUUID);
+						db.insertUser(user);
 					}else if(clientData instanceof HeartBeatProcotol){
 						System.out.println("用户心跳");
 					}
