@@ -30,7 +30,7 @@ public class UserFriendManager {
         DBInit.getInstance().getAsyncSession().insertOrReplaceInTx(UserFriends.class,userFriendses);
     }
 
-    public List<UserFriends> getUserFriends(String selfUUID){
+    public List<UserFriends> getUserFriends(){
        return DataControl.getUserFriendDao().loadAll();
     }
 }

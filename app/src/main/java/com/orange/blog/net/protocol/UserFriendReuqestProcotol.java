@@ -4,6 +4,7 @@ import com.orange.blog.common.ProjectApplication;
 import com.orange.blog.net.ProtocolException;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by orange on 16/6/22.
@@ -41,7 +42,11 @@ public class UserFriendReuqestProcotol extends BasicProtocol {
     @Override
     public int parseBinary(byte[] data) throws ProtocolException {
         int pos=super.parseBinary(data);
-        usersJson=new String(data,pos,data.length-pos);
+        try {
+            usersJson=new String(data,pos,data.length-pos,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return pos;
     }
 

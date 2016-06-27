@@ -4,15 +4,19 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.orange.blog.Adapter.ChatAdapter;
 import com.orange.blog.Entity.ChatContent;
+import com.orange.blog.View.AlertVIew.AlertView;
+import com.orange.blog.View.AlertVIew.OnItemClickListener;
 import com.orange.blog.common.JsonUtil;
 import com.orange.blog.database.bean.UserFriends;
 import com.orange.blog.net.SocketClient;
@@ -34,7 +38,7 @@ import butterknife.BindView;
  */
 public class SocketTestActivity extends BaseActivity implements
         SocketClient.SuccessCallBack,UDPDataInteractor.SuccessCallBack,
-                 TCPRequestCallBack {
+                 TCPRequestCallBack, OnItemClickListener {
 
 
     @BindView(R.id.ib_send)
@@ -54,10 +58,10 @@ public class SocketTestActivity extends BaseActivity implements
     private ChatAdapter chatAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private List<ChatContent> chatContentList=new ArrayList<ChatContent>();
-
+    private AlertView alert;
     public static final String[] items={"TCP短链接","UDP短链接","TCP长链接"};
-
-
+    private String [] friendsName;
+    private String targetMsgUUID;
     @Override
     int initContentView() {
         return R.layout.activity_sockettest;
@@ -70,14 +74,25 @@ public class SocketTestActivity extends BaseActivity implements
         addRadioGroup(items);
         initRecycleView();
         setTitle("聊天中");
+        setActionBarMenuIcon(R.drawable.menu);
     }
 
+    @Override
+    protected void actoinBarIconClick() {
+        alert=new AlertView("好友列表",null,"取消",null,friendsName,this,AlertView.Style.ActionSheet, this);
+
+        if (!alert.isShowing()){
+            alert.show();
+        }else {
+            alert.dismiss();
+        }
+    }
 
     public void initRecycleView(){
         layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        addMockData(6);
+        addMockData(4);
         chatAdapter=new ChatAdapter(this,chatContentList);
         recyclerView.setAdapter(chatAdapter);
     }
@@ -115,13 +130,16 @@ public class SocketTestActivity extends BaseActivity implements
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case 1:
+                        tcpLongConnect=null;
                         socketClient = new SocketClient(SocketTestActivity.this);
                         break;
                     case 2:
+                        tcpLongConnect=null;
                         udpDataInteractor = new UDPDataInteractor(SocketTestActivity.this);
                         break;
                     case 3:
-                        tcpLongConnect=new TCPLongConnectClient(SocketTestActivity.this);
+                        tcpLongConnect=null;
+                        tcpLongConnect = new TCPLongConnectClient(SocketTestActivity.this);
                         break;
                 }
             }
@@ -130,20 +148,26 @@ public class SocketTestActivity extends BaseActivity implements
         ib_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg=et_messageData.getText().toString().trim();
-                if (tcpLongConnect==null){
+                String msg = et_messageData.getText().toString().trim();
+                if (tcpLongConnect == null) {
                     return;
                 }
-                ChatMsgProcotol protocol=new ChatMsgProcotol();
+                ChatMsgProcotol protocol = new ChatMsgProcotol();
                 protocol.setMessage(msg);
-                tcpLongConnect.addNewRequest(protocol);
+                if (friendsName.length>0) {
+                    protocol.setMsgTargetUUID(targetMsgUUID);
+                    tcpLongConnect.addNewRequest(protocol);
+                    chatAdapter.addMessage(new ChatContent(ChatContent.MYSELF, msg));
+                } else {
+                    Toast.makeText(SocketTestActivity.this, "先去加个好友吧", Toast.LENGTH_SHORT).show();
+                }
 
-                chatAdapter.addMessage(new ChatContent(ChatContent.MYSELF, msg));
                 recyclerView.scrollToPosition(chatAdapter.getAdapterSize() - 1);
                 et_messageData.setText("");
             }
         });
     }
+
     @Override
     public void reciveDataSuccess(String message) {
         //todo
@@ -165,15 +189,23 @@ public class SocketTestActivity extends BaseActivity implements
             recyclerView.scrollToPosition(chatAdapter.getAdapterSize() - 1);
         }else if (responProcotol instanceof UserFriendReuqestProcotol){
             String json=((UserFriendReuqestProcotol)responProcotol).getUsersJson();
+            Log.d("orangeJson",json);
             List<UserFriends> usess=JsonUtil.fromJsonArr(json, UserFriends.class);
-            UserFriendManager.getInstance().insertUserFriends(usess);
+            if (usess!=null&&usess.size()>0){
+                targetMsgUUID=usess.get(0).getFriendUUID();
+                friendsName=new String[usess.size()];
+                for (int i=0,size=usess.size();i<size;i++){
+                    friendsName[i]=usess.get(i).getFriendNickName();
+                }
+                UserFriendManager.getInstance().insertUserFriends(usess);
+            }
         }
     }
 
     @Override
     public void onFailed(int errorCode, String msg) {
         if (errorCode==0)
-        setTitle(msg);
+            setTitle(msg);
     }
 
     @Override
@@ -181,5 +213,11 @@ public class SocketTestActivity extends BaseActivity implements
         super.onDestroy();
         if(tcpLongConnect!=null)
         tcpLongConnect.closeConnect();
+    }
+
+    @Override
+    public void onItemClick(Object o, int position) {
+        if (position!=-1)
+        targetMsgUUID=friendsName[position];
     }
 }

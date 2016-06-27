@@ -12,14 +12,17 @@ public class UserFriends {
     private String friendUUID;
     /** Not-null value. */
     private String friendIP;
+    /** Not-null value. */
+    private String friendNickName;
 
     public UserFriends() {
     }
 
-    public UserFriends(String selfUUID, String friendUUID, String friendIP) {
+    public UserFriends(String selfUUID, String friendUUID, String friendIP, String friendNickName) {
         this.selfUUID = selfUUID;
         this.friendUUID = friendUUID;
         this.friendIP = friendIP;
+        this.friendNickName = friendNickName;
     }
 
     /** Not-null value. */
@@ -50,6 +53,16 @@ public class UserFriends {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setFriendIP(String friendIP) {
         this.friendIP = friendIP;
+    }
+
+    /** Not-null value. */
+    public String getFriendNickName() {
+        return friendNickName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setFriendNickName(String friendNickName) {
+        this.friendNickName = friendNickName;
     }
 
 }

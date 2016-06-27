@@ -29,6 +29,7 @@ public class orangegenerator {
         entity.addStringProperty("selfUUID").notNull();
         entity.addStringProperty("friendUUID").notNull().unique();
         entity.addStringProperty("friendIP").notNull();
+        entity.addStringProperty("friendNickName").notNull();
     }
 
     /**

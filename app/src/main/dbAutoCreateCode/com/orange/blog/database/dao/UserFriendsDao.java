@@ -26,6 +26,7 @@ public class UserFriendsDao extends AbstractDao<UserFriends, Void> {
         public final static Property SelfUUID = new Property(0, String.class, "selfUUID", false, "SELF_UUID");
         public final static Property FriendUUID = new Property(1, String.class, "friendUUID", false, "FRIEND_UUID");
         public final static Property FriendIP = new Property(2, String.class, "friendIP", false, "FRIEND_IP");
+        public final static Property FriendNickName = new Property(3, String.class, "friendNickName", false, "FRIEND_NICK_NAME");
     };
 
 
@@ -43,7 +44,8 @@ public class UserFriendsDao extends AbstractDao<UserFriends, Void> {
         db.execSQL("CREATE TABLE " + constraint + "\"USER_FRIENDS\" (" + //
                 "\"SELF_UUID\" TEXT NOT NULL ," + // 0: selfUUID
                 "\"FRIEND_UUID\" TEXT NOT NULL UNIQUE ," + // 1: friendUUID
-                "\"FRIEND_IP\" TEXT NOT NULL );"); // 2: friendIP
+                "\"FRIEND_IP\" TEXT NOT NULL ," + // 2: friendIP
+                "\"FRIEND_NICK_NAME\" TEXT NOT NULL );"); // 3: friendNickName
     }
 
     /** Drops the underlying database table. */
@@ -59,6 +61,7 @@ public class UserFriendsDao extends AbstractDao<UserFriends, Void> {
         stmt.bindString(1, entity.getSelfUUID());
         stmt.bindString(2, entity.getFriendUUID());
         stmt.bindString(3, entity.getFriendIP());
+        stmt.bindString(4, entity.getFriendNickName());
     }
 
     /** @inheritdoc */
@@ -73,7 +76,8 @@ public class UserFriendsDao extends AbstractDao<UserFriends, Void> {
         UserFriends entity = new UserFriends( //
             cursor.getString(offset + 0), // selfUUID
             cursor.getString(offset + 1), // friendUUID
-            cursor.getString(offset + 2) // friendIP
+            cursor.getString(offset + 2), // friendIP
+            cursor.getString(offset + 3) // friendNickName
         );
         return entity;
     }
@@ -84,6 +88,7 @@ public class UserFriendsDao extends AbstractDao<UserFriends, Void> {
         entity.setSelfUUID(cursor.getString(offset + 0));
         entity.setFriendUUID(cursor.getString(offset + 1));
         entity.setFriendIP(cursor.getString(offset + 2));
+        entity.setFriendNickName(cursor.getString(offset + 3));
      }
     
     /** @inheritdoc */

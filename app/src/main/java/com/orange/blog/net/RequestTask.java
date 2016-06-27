@@ -30,8 +30,8 @@ import javax.net.SocketFactory;
  *
  */
 public class RequestTask implements Runnable {
-//    private static final String ADDRESS = "172.16.101.148";
-    private static final String ADDRESS = "192.168.1.102";
+//    private static final String ADDRESS = "172.16.101.148";//house192.168.1.12
+    private static final String ADDRESS = "192.168.1.12";
     private static final int PORT = 9013;
     private static final int SUCCESS = 100;
     private static final int FAILED = -1;

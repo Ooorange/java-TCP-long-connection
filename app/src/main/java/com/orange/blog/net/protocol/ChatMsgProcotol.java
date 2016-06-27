@@ -20,7 +20,7 @@ public class ChatMsgProcotol extends BasicProtocol implements Serializable{
 
     private String message="";
     private String selfUUid="00000000000000000000000000000000";
-    private String msgTargetUUID="4d8e938015b34049a21fad31a3e29820";
+    private String msgTargetUUID="00000000000000000000000000000000";
     private int clientVersion=1;
     public static final String CHATMEGCOMMEND="0001";
 

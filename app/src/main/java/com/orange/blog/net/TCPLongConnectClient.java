@@ -1,12 +1,7 @@
 package com.orange.blog.net;
 
-import android.util.Log;
-
-import com.orange.blog.database.bean.UserFriends;
 import com.orange.blog.net.protocol.ChatMsgProcotol;
-import com.orange.blog.storage.UserFriendManager;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -42,18 +37,6 @@ public class TCPLongConnectClient {
     }
 
     public void addNewRequest(ChatMsgProcotol data){
-        List<UserFriends> userFriendsList =null;
-        try {
-             userFriendsList = UserFriendManager.getInstance().getUserFriends(data.getSelfUUid());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        if (userFriendsList==null||userFriendsList.size()<=0){
-            Log.d("orangeGet","is null");
-            return;
-        }else {
-            Log.d("orangeGet",userFriendsList.get(0).getFriendIP());
-        }
         if (requestTask!=null)
         requestTask.addRequest(data);
     }
